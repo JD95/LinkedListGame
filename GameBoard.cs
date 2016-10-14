@@ -19,13 +19,23 @@ public class Tuple<X,Y>
 public class GameBoard : MonoBehaviour {
 
 	GameObject[,] board = new GameObject[10, 10];
+    List<GameObject> nodes = new List<GameObject>();
 	System.Random rand = new System.Random();
 
-	void createNodeAt(int x, int z)
+    public GameObject newElementLight;
+    public GameObject currentPointerLight;
+    public GameObject nextPointerLight;
+    public GameObject nextNextPointerLight;
+
+    GameObject createNodeAt(int x, int z)
 	{
 		// load the prefab "NodeCube" and create one on the board
 		board [x, z] = Instantiate(Resources.Load("NodeCube")) as GameObject;
 		board [x, z].transform.position = new Vector3 (x-5,0,z-5);
+
+        nodes.Add(board[x, z]);
+
+        return board[x, z];
 	}
 
 	Tuple<int,int> genRandCoord(System.Random rand)
@@ -33,7 +43,7 @@ public class GameBoard : MonoBehaviour {
 		return new Tuple<int,int> (rand.Next (0, 10), rand.Next (0, 10));
 	}
 
-	void createNewRandomNode()
+    GameObject createNewRandomNode()
 	{
 		var newCoord = genRandCoord (rand);
 
@@ -41,7 +51,7 @@ public class GameBoard : MonoBehaviour {
 			newCoord = genRandCoord (rand);
 		}
 
-		createNodeAt (newCoord.first, newCoord.second);
+		return createNodeAt (newCoord.first, newCoord.second);
 	}
 
 	// Use this for initialization
@@ -49,10 +59,26 @@ public class GameBoard : MonoBehaviour {
 		for (int i = 0; i < 10; i++) {
 			createNewRandomNode ();
 		}
-	}
+
+        moveLight(currentPointerLight, nodes[0].transform.position);
+
+        nextPointerLight.SetActive(false);
+        nextNextPointerLight.SetActive(false);
+    }
 	
 	// Update is called once per frame
 	void Update () {
 	
 	}
+
+    private void moveLight(GameObject light, Vector3 position)
+    {
+        light.transform.position = new Vector3(position.x, 5.55f, position.z);
+    }
+
+    public void addNewNode()
+    {
+        var node = createNewRandomNode();
+        moveLight(newElementLight, node.transform.position);
+    }
 }
