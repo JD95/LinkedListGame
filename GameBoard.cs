@@ -28,6 +28,9 @@ public class GameBoard : MonoBehaviour {
     public GameObject nextNextPointerLight;
 
     public AudioSource newElementSound;
+    public AudioSource currentPointerSound;
+
+    private int currentNode = 0;
 
     GameObject createNodeAt(int x, int z)
 	{
@@ -83,5 +86,13 @@ public class GameBoard : MonoBehaviour {
         var node = createNewRandomNode();
         moveLight(newElementLight, node.transform.position);
         newElementSound.Play();
+    }
+
+    public void moveCurrentPointer()
+    {
+        currentNode += currentNode < nodes.Count - 1 ? 1 : 0;
+        moveLight(currentPointerLight, nodes[currentNode].transform.position);
+        currentPointerLight.SetActive(true);
+        currentPointerSound.Play();
     }
 }
