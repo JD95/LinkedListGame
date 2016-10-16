@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
+using UnityEngine.UI;
 
 public class Tuple<X,Y>
 {
@@ -41,6 +42,8 @@ public class GameBoard : MonoBehaviour {
 
     private GameObject newElement;
 
+    public GameObject nullPointerNode;
+
     public GameObject newElementLight;
     public GameObject currentPointerLight;
     public GameObject nextPointerLight;
@@ -57,11 +60,17 @@ public class GameBoard : MonoBehaviour {
     private GameLinkedList<GameObject> nodes = new GameLinkedList<GameObject>();
     private GameNode<GameObject> currentNode = null;
 
-    GameObject createNodeAt(int x, int z)
+    GameObject createNodeAt(int val, int x, int z)
 	{
 		// load the prefab "NodeCube" and create one on the board
 		board [x, z] = Instantiate(Resources.Load("NodeCube")) as GameObject;
 		board [x, z].transform.position = new Vector3 (x-5,0,z-5);
+
+        var nodeText = board[x, z].GetComponentInChildren<Text>() as Text;
+
+        nodeText.text = val.ToString();
+
+        board[x, z].SetActive(false);
 
         return board[x, z];
 	}
@@ -79,7 +88,7 @@ public class GameBoard : MonoBehaviour {
 			newCoord = genRandCoord (rand);
 		}
 
-		return createNodeAt (newCoord.first, newCoord.second);
+		return createNodeAt(rand.Next(0,20), newCoord.first, newCoord.second);
 	}
 
     private void genNodes()
@@ -106,7 +115,8 @@ public class GameBoard : MonoBehaviour {
         genNodes();
 
         currentNode = nodes.first;
-        moveLight(currentPointerLight, currentNode.value.transform.position);
+        currentNode.value.SetActive(true);
+        moveLight(currentPointerLight, currentNode.value);
 
         nextPointerLight.SetActive(false);
         nextNextPointerLight.SetActive(false);
@@ -119,31 +129,39 @@ public class GameBoard : MonoBehaviour {
 	
 	}
 
-    private void moveLight(GameObject light, Vector3 position)
+    private void moveLight(GameObject light, GameObject node)
     {
+        var position = node.transform.position;
         light.transform.position = new Vector3(position.x, 5.55f, position.z);
     }
 
     public void addNewNode()
     {
         var node = createNewRandomNode();
+        node.SetActive(true);
         newElementLight.SetActive(true);
-        moveLight(newElementLight, node.transform.position);
+        moveLight(newElementLight, node);
         newElementSound.Play();
         newElement = node;
     }
 
-    private void activateNullLight()
+    private void toggleNode(GameObject light, GameObject node)
     {
-        nullPointerLight.SetActive(true);
+        var active = node.activeSelf;
+        light.SetActive(!active);
+        node.SetActive(!active);
     }
 
+    private void toggleNullPointer()
+    {
+        toggleNode(nullPointerLight, nullPointerNode);
+    }
 
     private Action nullOperation(Action act)
     {
         return () => {
             act();
-            activateNullLight();
+            toggleNullPointer();
         };
     }
 
@@ -158,18 +176,26 @@ public class GameBoard : MonoBehaviour {
     private void moveToNull()
     {
         nullOperation(() => {
-            currentNode = null;
+            currentNode.value.SetActive(false);
             currentPointerLight.SetActive(false);
-        });
+            currentNode = null;
+        })();
     }
 
     public void moveCurrentPointer()
     {
-        if (currentNode.next == null) moveToNull();
+        if (currentNode.next == null) {
+            moveToNull();
+            return;
+        }
 
+        currentNode.value.SetActive(false);
         currentNode = currentNode.next;
-        moveLight(currentPointerLight, currentNode.value.transform.position);
+        currentNode.value.SetActive(true);
+
+        moveLight(currentPointerLight, currentNode.value);
         currentPointerLight.SetActive(true);
+
         currentPointerSound.Play();
     }
 
@@ -188,5 +214,32 @@ public class GameBoard : MonoBehaviour {
     public void pointCurrentAtNextNextElement()
     {
 
+    }
+
+    public void togglePointer(GameObject light, GameObject node)
+    {
+        if (node == null)
+        {
+            toggleNullPointer();
+            light.SetActive(false);
+            //node.SetActive(false);
+        }
+        else
+        {
+            moveLight(light, node);
+            toggleNode(light, node);
+        }
+    }
+
+    public void toggleNextPointer()
+    {
+        togglePointer(nextPointerLight, currentNode.next == null ? null : currentNode.next.value);
+        nextPointerSound.Play();
+    }
+
+    public void toggleNextNextPointer()
+    {
+        togglePointer(nextNextPointerLight, currentNode.next == null ? null : currentNode.next.next == null ? null : currentNode.next.next.value);
+        nextNextPointerSound.Play();
     }
 }
