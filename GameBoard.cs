@@ -27,6 +27,8 @@ public class GameBoard : MonoBehaviour {
     public GameObject nextPointerLight;
     public GameObject nextNextPointerLight;
 
+    public AudioSource newElementSound;
+
     GameObject createNodeAt(int x, int z)
 	{
 		// load the prefab "NodeCube" and create one on the board
@@ -80,5 +82,6 @@ public class GameBoard : MonoBehaviour {
     {
         var node = createNewRandomNode();
         moveLight(newElementLight, node.transform.position);
+        newElementSound.Play();
     }
 }
