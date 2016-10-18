@@ -138,10 +138,12 @@ public class GameBoard : MonoBehaviour {
     public void addNewNode()
     {
         var node = createNewRandomNode();
-        node.SetActive(true);
-        newElementLight.SetActive(true);
+
+        toggleNode(newElementLight, node);
         moveLight(newElementLight, node);
         newElementSound.Play();
+
+        if(newElement != null) newElement.SetActive(false);
         newElement = node;
     }
 
