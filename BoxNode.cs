@@ -3,8 +3,12 @@ using System.Collections;
 
 public class BoxNode : MonoBehaviour {
 	public BoxNode next = null;
-	public GameObject nodeManager;
-	private bool wasClicked = false;
+
+    public static BoxNode currentNode = null;
+    public static bool activeSelection = false; //basically if the player is controlling the arrow rn.
+
+
+    private bool wasClicked = false;
 	private bool lineDrawn = false;
 	private float distance = 45.9f;
 	// Use this for initialization
@@ -14,27 +18,29 @@ public class BoxNode : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (wasClicked) {
-			if (nodeManager.GetComponent<NodeManager> ().currentNode == null) {
-				nodeManager.GetComponent<NodeManager> ().currentNode = this;
-				nodeManager.GetComponent<NodeManager> ().activeSelection = true;
+
+        if (wasClicked) {
+			if (currentNode == null) {
+                currentNode = this;
+                activeSelection = true;
 			}
-			if (nodeManager.GetComponent<NodeManager> ().currentNode == this) {
+			if (currentNode == this) {
 				drawArrow (Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distance)));
 			}
 		}
 
-		if (next != null) {
+		if (next != null && next.gameObject.activeSelf) {
 			drawArrow (next.gameObject.transform.position);
 		}
 	}
 
 	void OnMouseDown(){
-		wasClicked = !wasClicked;
-		if (nodeManager.GetComponent<NodeManager> ().currentNode == this) {
-			nodeManager.GetComponent<NodeManager> ().currentNode = null;
+
+        wasClicked = !wasClicked;
+		if (currentNode == this) {
+            currentNode = null;
 		}
-		if (nodeManager.GetComponent<NodeManager> ().currentNode != this && nodeManager.GetComponent<NodeManager> ().currentNode != null) {
+		if (currentNode != this && currentNode != null) {
 			setNextNode(this.GetComponent<BoxNode>());
 		}
 	}
@@ -54,12 +60,12 @@ public class BoxNode : MonoBehaviour {
 		lr.SetPosition (0, this.transform.position);
 		lr.SetPosition (1, end);
 
-		Debug.Log (end);
+		//Debug.Log (end);
 	}
 
 	void setNextNode(BoxNode hit){
-		nodeManager.GetComponent<NodeManager> ().currentNode.next = hit;
-		nodeManager.GetComponent<NodeManager> ().currentNode.wasClicked = !wasClicked;
-		nodeManager.GetComponent<NodeManager> ().currentNode = null;
+        currentNode.next = hit;
+        currentNode.wasClicked = !wasClicked;
+        currentNode = null;
 	}
 }
