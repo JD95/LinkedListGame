@@ -32,17 +32,37 @@ public class BoxNode : MonoBehaviour {
 		if (next != null && next.gameObject.activeSelf) {
 			drawArrow (next.gameObject.transform.position);
 		}
+
+		if (Input.GetMouseButtonDown (1)) {
+
+			Debug.Log ("Right Click!");
+			GameObject.Destroy (this.gameObject);
+
+		}
 	}
 
 	void OnMouseDown(){
 
-        wasClicked = !wasClicked;
-		if (currentNode == this) {
-            currentNode = null;
+		Debug.Log ("Clicked!");
+
+		// click right mouse 
+		if (Input.GetMouseButtonDown (1)) {
+		
+			Debug.Log ("Right Click!");
+			GameObject.Destroy (this.gameObject);
+
+		} else if (Input.GetMouseButtonDown (0)) { //left 
+
+			Debug.Log ("Left Clicked!");
+			wasClicked = !wasClicked;
+			if (currentNode == this) {
+				currentNode = null;
+			}
+			if (currentNode != this && currentNode != null) {
+				setNextNode(this.GetComponent<BoxNode>());
+			}
 		}
-		if (currentNode != this && currentNode != null) {
-			setNextNode(this.GetComponent<BoxNode>());
-		}
+
 	}
 
 	/********************
