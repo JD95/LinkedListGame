@@ -18,12 +18,7 @@ public class BoxNode : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
         if (wasClicked) {
-			if (currentNode == null) {
-                currentNode = this;
-                activeSelection = true;
-			}
 			if (currentNode == this) {
 				drawArrow (Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, distance)));
 			}
@@ -36,14 +31,16 @@ public class BoxNode : MonoBehaviour {
 	}
 
 	void OnMouseDown(){
-			wasClicked = !wasClicked;
 			if (currentNode == this) {
 				currentNode = null;
+			} else if (currentNode == null){
+				currentNode = this;
+				activeSelection = true;
 			}
 			if (currentNode != this && currentNode != null) {
 				setNextNode (this.GetComponent<BoxNode> ());
 			}
-
+		wasClicked = !wasClicked;
 	}
 
 	public void deleteNode(){
