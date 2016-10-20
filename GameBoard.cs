@@ -120,7 +120,7 @@ public class GameBoard : MonoBehaviour {
 
         nextPointerLight.SetActive(false);
         nextNextPointerLight.SetActive(false);
-        nullPointerLight.SetActive(false);
+        nullPointerLight.SetActive(true);
         newElementLight.SetActive(false);
     }
 	
