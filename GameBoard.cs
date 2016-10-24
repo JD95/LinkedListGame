@@ -109,6 +109,12 @@ public class GameBoard : MonoBehaviour {
         }
     }
 
+	private void setNodeButtonActive(GameNode<GameObject> node, bool b)
+	{
+		var button = node.value.GetComponentInChildren<Canvas> ().transform.GetChild (1).gameObject;
+		if(button != null) button.gameObject.SetActive(b);
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -116,11 +122,13 @@ public class GameBoard : MonoBehaviour {
 
         currentNode = nodes.first;
         currentNode.value.SetActive(true);
+		setNodeButtonActive (currentNode, false);
+
         moveLight(currentPointerLight, currentNode.value);
 
         nextPointerLight.SetActive(false);
         nextNextPointerLight.SetActive(false);
-        nullPointerLight.SetActive(true);
+        nullPointerLight.SetActive(false);
         newElementLight.SetActive(false);
     }
 	
@@ -190,10 +198,15 @@ public class GameBoard : MonoBehaviour {
             moveToNull();
             return;
         }
+			
+		setNodeButtonActive (currentNode, true);
 
-        currentNode.value.SetActive(false);
+		currentNode.value.SetActive(false);
+
         currentNode = currentNode.next;
         currentNode.value.SetActive(true);
+
+		setNodeButtonActive (currentNode, false);
 
         moveLight(currentPointerLight, currentNode.value);
         currentPointerLight.SetActive(true);
