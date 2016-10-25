@@ -43,6 +43,7 @@ public class GameBoard : MonoBehaviour {
 
     private List<GameObject> newElements= new List<GameObject>();
 
+    public GameObject nullCube;
     public NodePointer nullPointer;
     public NodePointer currentPointer;
     public NodePointer nextPointer;
@@ -60,6 +61,8 @@ public class GameBoard : MonoBehaviour {
         nextPointer.pointTo(currentPointer.node.next);
 
         nextNextPointer.pointTo(currentPointer.node.next.next);
+
+        nullPointer.pointTo(new GameNode(nullCube));
 
     }
 
@@ -133,21 +136,21 @@ public class GameBoard : MonoBehaviour {
 
     private void moveToNull()
     {
-        currentPointer.node.value.SetActive(false);
-        currentPointer.spotlight.SetActive(false);
-        currentPointer.node = null;
+        currentPointer.togglePointer();
         nullPointer.toggleNode();
     }
 
     public void moveCurrentPointer()
     {
-        if (currentPointer.node.next == null) {
+        if (currentPointer.node.next == null)
+        {
             moveToNull();
-            return;
         }
-
-        currentPointer.pointToAndActivate(currentPointer.node.next);
-        currentPointer.sound.Play();
+        else
+        {
+            currentPointer.pointToAndActivate(currentPointer.node.next);
+            currentPointer.sound.Play();
+        }
     }
 
     public void toggleNextPointer()
@@ -158,8 +161,8 @@ public class GameBoard : MonoBehaviour {
         }
         else
         {
-            nextPointer.togglePointer();
             nextPointer.pointTo(currentPointer.node.next);
+            nextPointer.togglePointer();
             nextPointer.sound.Play();
         }
     }
@@ -172,8 +175,8 @@ public class GameBoard : MonoBehaviour {
         }
         else
         {
-            nextNextPointer.togglePointer();
             nextNextPointer.pointTo(currentPointer.node.next.next);
+            nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
         }
     }
