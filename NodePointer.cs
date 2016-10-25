@@ -10,6 +10,11 @@ public class NodePointer : MonoBehaviour
     public bool isCurrentPointer = false;
     public bool isActive = false;
 
+    private float distance = 45.9f;
+
+    public void Update()
+    {   }
+
     public NodePointer() { }
 
     public NodePointer(GameNode ptr, GameObject light, AudioSource sound)
@@ -48,18 +53,18 @@ public class NodePointer : MonoBehaviour
     {
         if (isCurrentPointer && node != null)
         {
-            node.value.GetComponent<BoxNode>().setNodeButtonActive(true);
+            node.value.GetComponent<GameNode>().setNodeButtonActive(true);
             node.value.SetActive(false);
         }
 
         var position = otherNode.value.transform.position;
         spotlight.transform.position = new Vector3(position.x, 5.55f, position.z);
 
-        otherNode.value.GetComponent<BoxNode>().newElementLight.SetActive(false);
+        otherNode.value.GetComponent<GameNode>().newElementLight.SetActive(false);
 
         node = otherNode;
 
-        if (isCurrentPointer) node.value.GetComponent<BoxNode>().setNodeButtonActive(false);
+        if (isCurrentPointer) node.value.GetComponent<GameNode>().setNodeButtonActive(false);
     }
 
     public void pointToAndActivate(GameNode otherNode)
@@ -67,4 +72,6 @@ public class NodePointer : MonoBehaviour
         pointTo(otherNode);
         node.value.SetActive(true);
     }
+
+
 }

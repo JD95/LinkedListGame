@@ -22,26 +22,30 @@ public class GameLinkedList
 {
     public GameNode first;
     public GameNode last;
-}
 
-public class GameNode
-{
-    public GameObject value { get; set; }
-    public GameNode next { get; set; }
-
-    public GameNode(GameObject val)
+    public GameNode find(GameObject cubeToFind, List<GameNode> otherNodes)
     {
-        value = val;
+        var searchNode = first;
+
+        while (searchNode != null && searchNode.value != cubeToFind)
+            searchNode = searchNode.next;
+
+        if(searchNode == null)
+            searchNode = otherNodes.Where(n => n.value == cubeToFind)
+                                   .FirstOrDefault();
+
+        return searchNode;
     }
 }
 
 
 public class GameBoard : MonoBehaviour {
 
+    private const int numStartingNodes = 10;
 	private GameObject[,] board = new GameObject[10, 10];
     private System.Random rand = new System.Random();
 
-    private List<GameObject> newElements= new List<GameObject>();
+    private static List<GameNode> newElements = new List<GameNode>();
 
     public GameObject nullCube;
     public NodePointer nullPointer;
@@ -49,8 +53,9 @@ public class GameBoard : MonoBehaviour {
     public NodePointer nextPointer;
     public NodePointer nextNextPointer;
 
-    private GameLinkedList nodes = new GameLinkedList();
-    
+    private static GameLinkedList nodes = new GameLinkedList();
+    public static GameNode drawCube = null;
+
     // Use this for initialization
     void Start()
     {
@@ -62,7 +67,7 @@ public class GameBoard : MonoBehaviour {
 
         nextNextPointer.pointTo(currentPointer.node.next.next);
 
-        nullPointer.pointTo(new GameNode(nullCube));
+        nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
     }
 
@@ -72,6 +77,39 @@ public class GameBoard : MonoBehaviour {
         currentPointer.setNodeActive(true);
         if (nextPointer.isActive) nextPointer.setNodeActive(true);
         if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
+    }
+
+    public static void lineDrawing(GameNode selectedCube)
+    {
+        Debug.Log("Clicked");
+
+        if (selectedCube == null) return;
+
+        //Debug.Log("Selected Something!");
+        if (drawCube == null)
+        {
+            Debug.Log("Drawing cube selected!");
+            drawCube = selectedCube.GetComponent<GameNode>();
+        }
+        else if (drawCube == selectedCube)
+        {
+            Debug.Log("Drawing Cube deselected!");
+            drawCube = null;
+        }
+        else if (drawCube != selectedCube && drawCube != null)
+        {
+            var lineNode = nodes.find(drawCube.gameObject, newElements);
+            var selectedNode = nodes.find(selectedCube.transform.gameObject, newElements);
+
+            if (lineNode != null && selectedNode != null)
+            {
+                Debug.Log("Nodes connected!");
+                lineNode.next = selectedNode;
+            }
+
+            drawCube = null;
+        }
+
     }
 
     GameObject createNodeAt(int val, int x, int z)
@@ -107,17 +145,17 @@ public class GameBoard : MonoBehaviour {
 
     private void genNodes()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < numStartingNodes; i++)
         {
             if (nodes.first == null)
             {
                 var newNode = createNewRandomNode();
-                nodes.first = new GameNode(newNode);
+                nodes.first = newNode.GetComponent<GameNode>();
                 nodes.last = nodes.first;
             }
             else
             {
-                nodes.last.next = new GameNode(createNewRandomNode());
+                nodes.last.next = createNewRandomNode().GetComponent<GameNode>();
                 nodes.last = nodes.last.next;
             }
         }
@@ -125,14 +163,13 @@ public class GameBoard : MonoBehaviour {
 
     public void addNewNode()
     {
-        var node = createNewRandomNode();
+        var node = createNewRandomNode().GetComponent<GameNode>();
 
+        node.value.SetActive(true);
+        node.newElementSound.Play();
+        nodes.last = node;
         newElements.Add(node);
-
-        node.GetComponent<BoxNode>().newElementSound.Play();
     }
-
-
 
     private void moveToNull()
     {

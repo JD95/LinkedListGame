@@ -495,7 +495,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4247cbdfa783b949ae0f2fcb2f2a0e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  next: {fileID: 0}
   deleteButton: {fileID: 1000013476855136}
   newElementLight: {fileID: 1000013448336262}
   newElementSound: {fileID: 82000013908984640}

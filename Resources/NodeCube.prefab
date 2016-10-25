@@ -55,9 +55,9 @@ GameObject:
   - 33: {fileID: 33000013805686556}
   - 65: {fileID: 65000013790497854}
   - 23: {fileID: 23000011614554552}
-  - 114: {fileID: 114000012199547802}
   - 120: {fileID: 120000011225884108}
   - 82: {fileID: 82000010954571978}
+  - 114: {fileID: 114000013046619738}
   m_Layer: 0
   m_Name: NodeCube
   m_TagString: Untagged
@@ -125,7 +125,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000012068955454}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.612158, y: 4.499887e-17, z: -2.026569}
+  m_LocalPosition: {x: -4.1939507, y: -6.65519e-18, z: 0.29972312}
   m_LocalScale: {x: 0.75, y: 1, z: 0.75}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
@@ -357,7 +357,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 114000012199547802}
+      - m_Target: {fileID: 114000013046619738}
         m_MethodName: deleteNode
         m_Mode: 1
         m_Arguments:
@@ -430,21 +430,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114000012199547802
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012068955454}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4247cbdfa783b949ae0f2fcb2f2a0e9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  next: {fileID: 0}
-  deleteButton: {fileID: 1000013071719994}
-  newElementLight: {fileID: 1000010532652784}
-  newElementSound: {fileID: 82000010954571978}
 --- !u!114 &114000012219256462
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -499,6 +484,22 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 100
+--- !u!114 &114000013046619738
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012068955454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4247cbdfa783b949ae0f2fcb2f2a0e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  value: {fileID: 1000012068955454}
+  next: {fileID: 0}
+  deleteButton: {fileID: 1000013071719994}
+  newElementLight: {fileID: 1000010532652784}
+  newElementSound: {fileID: 82000010954571978}
 --- !u!120 &120000011225884108
 LineRenderer:
   m_ObjectHideFlags: 1
