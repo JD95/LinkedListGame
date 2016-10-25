@@ -18,47 +18,58 @@ public class Tuple<X,Y>
 }
 
 
-public class GameLinkedList<T>
+public class GameLinkedList
 {
-    public GameNode<T> first;
-    public GameNode<T> last;
+    public GameNode first;
+    public GameNode last;
 }
 
-public class GameNode<T>
+public class GameNode
 {
-    public T value { get; set; }
-    public GameNode<T> next { get; set; }
+    public GameObject value { get; set; }
+    public GameNode next { get; set; }
 
-    public GameNode(T val)
+    public GameNode(GameObject val)
     {
         value = val;
     }
 }
+
 
 public class GameBoard : MonoBehaviour {
 
 	private GameObject[,] board = new GameObject[10, 10];
     private System.Random rand = new System.Random();
 
-    private GameObject newElement;
+    private List<GameObject> newElements= new List<GameObject>();
 
-    public GameObject nullPointerNode;
+    public NodePointer nullPointer;
+    public NodePointer currentPointer;
+    public NodePointer nextPointer;
+    public NodePointer nextNextPointer;
 
-    public GameObject newElementLight;
-    public GameObject currentPointerLight;
-    public GameObject nextPointerLight;
-    public GameObject nextNextPointerLight;
-    public GameObject nullPointerLight;
+    private GameLinkedList nodes = new GameLinkedList();
+    
+    // Use this for initialization
+    void Start()
+    {
+        genNodes();
 
-    public AudioSource newElementSound;
-    public AudioSource currentPointerSound;
-    public AudioSource nextPointerSound;
-    public AudioSource nextNextPointerSound;
-    public AudioSource nullPointerSound;
+        currentPointer.pointToAndActivate(nodes.first);
 
+        nextPointer.pointTo(currentPointer.node.next);
 
-    private GameLinkedList<GameObject> nodes = new GameLinkedList<GameObject>();
-    private GameNode<GameObject> currentNode = null;
+        nextNextPointer.pointTo(currentPointer.node.next.next);
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        currentPointer.setNodeActive(true);
+        if (nextPointer.isActive) nextPointer.setNodeActive(true);
+        if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
+    }
 
     GameObject createNodeAt(int val, int x, int z)
 	{
@@ -98,163 +109,72 @@ public class GameBoard : MonoBehaviour {
             if (nodes.first == null)
             {
                 var newNode = createNewRandomNode();
-                nodes.first = new GameNode<GameObject>(newNode);
+                nodes.first = new GameNode(newNode);
                 nodes.last = nodes.first;
             }
             else
             {
-                nodes.last.next = new GameNode<GameObject>(createNewRandomNode());
+                nodes.last.next = new GameNode(createNewRandomNode());
                 nodes.last = nodes.last.next;
             }
         }
-    }
-
-	private void setNodeButtonActive(GameNode<GameObject> node, bool b)
-	{
-		var button = node.value.GetComponentInChildren<Canvas> ().transform.GetChild (1).gameObject;
-		if(button != null) button.gameObject.SetActive(b);
-	}
-
-	// Use this for initialization
-	void Start () {
-
-        genNodes();
-
-        currentNode = nodes.first;
-        currentNode.value.SetActive(true);
-		setNodeButtonActive (currentNode, false);
-
-        moveLight(currentPointerLight, currentNode.value);
-
-        nextPointerLight.SetActive(false);
-        nextNextPointerLight.SetActive(false);
-        nullPointerLight.SetActive(false);
-        newElementLight.SetActive(false);
-    }
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
-    private void moveLight(GameObject light, GameObject node)
-    {
-        var position = node.transform.position;
-        light.transform.position = new Vector3(position.x, 5.55f, position.z);
     }
 
     public void addNewNode()
     {
         var node = createNewRandomNode();
 
-        toggleNode(newElementLight, node);
-        moveLight(newElementLight, node);
-        newElementSound.Play();
+        newElements.Add(node);
 
-        if(newElement != null) newElement.SetActive(false);
-        newElement = node;
+        node.GetComponent<BoxNode>().newElementSound.Play();
     }
 
-    private void toggleNode(GameObject light, GameObject node)
-    {
-        var active = node.activeSelf;
-        light.SetActive(!active);
-        node.SetActive(!active);
-    }
 
-    private void toggleNullPointer()
-    {
-        toggleNode(nullPointerLight, nullPointerNode);
-    }
-
-    private Action nullOperation(Action act)
-    {
-        return () => {
-            act();
-            toggleNullPointer();
-        };
-    }
-
-    private void pointToNull(GameNode<GameObject> node, GameObject previousLight)
-    {
-        nullOperation(() => {
-            previousLight.SetActive(false);
-            node.next = null;
-        });
-    }
 
     private void moveToNull()
     {
-        nullOperation(() => {
-            currentNode.value.SetActive(false);
-            currentPointerLight.SetActive(false);
-            currentNode = null;
-        })();
+        currentPointer.node.value.SetActive(false);
+        currentPointer.spotlight.SetActive(false);
+        currentPointer.node = null;
+        nullPointer.toggleNode();
     }
 
     public void moveCurrentPointer()
     {
-        if (currentNode.next == null) {
+        if (currentPointer.node.next == null) {
             moveToNull();
             return;
         }
-			
-		setNodeButtonActive (currentNode, true);
 
-		currentNode.value.SetActive(false);
-
-        currentNode = currentNode.next;
-        currentNode.value.SetActive(true);
-
-		setNodeButtonActive (currentNode, false);
-
-        moveLight(currentPointerLight, currentNode.value);
-        currentPointerLight.SetActive(true);
-
-        currentPointerSound.Play();
-    }
-
-    public void pointCurrentAtNewElement()
-    {
-        currentNode.next = new GameNode<GameObject>(newElement);
-        newElement = null;
-        newElementLight.SetActive(false);
-    }
-
-    public void pointCurrentAtNextElement()
-    {
-
-    }
-
-    public void pointCurrentAtNextNextElement()
-    {
-
-    }
-
-    public void togglePointer(GameObject light, GameObject node)
-    {
-        if (node == null)
-        {
-            toggleNullPointer();
-            light.SetActive(false);
-            //node.SetActive(false);
-        }
-        else
-        {
-            moveLight(light, node);
-            toggleNode(light, node);
-        }
+        currentPointer.pointToAndActivate(currentPointer.node.next);
+        currentPointer.sound.Play();
     }
 
     public void toggleNextPointer()
     {
-        togglePointer(nextPointerLight, currentNode.next == null ? null : currentNode.next.value);
-        nextPointerSound.Play();
+        if(currentPointer.node.next == null)
+        {
+            nullPointer.togglePointer();
+        }
+        else
+        {
+            nextPointer.togglePointer();
+            nextPointer.pointTo(currentPointer.node.next);
+            nextPointer.sound.Play();
+        }
     }
 
     public void toggleNextNextPointer()
     {
-        togglePointer(nextNextPointerLight, currentNode.next == null ? null : currentNode.next.next == null ? null : currentNode.next.next.value);
-        nextNextPointerSound.Play();
+        if(currentPointer.node.next == null || currentPointer.node.next.next == null)
+        {
+            nullPointer.togglePointer();
+        }
+        else
+        {
+            nextNextPointer.togglePointer();
+            nextNextPointer.pointTo(currentPointer.node.next.next);
+            nextNextPointer.sound.Play();
+        }
     }
 }
