@@ -11,6 +11,8 @@ public class GameNode : MonoBehaviour {
     public AudioSource newElementSound;
 
 	private float distance = 45.9f;
+	public AddPopupText popupText;
+
 
 	void Start () {	
 	}
@@ -40,6 +42,7 @@ public class GameNode : MonoBehaviour {
 
 	public void deleteNode(){
 		GameObject.Destroy (this.gameObject);
+		popupText.makePopup ("You deleted a node!");
 	}
 
     public void setNodeButtonActive(bool b)

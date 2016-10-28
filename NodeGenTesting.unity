@@ -400,6 +400,7 @@ MonoBehaviour:
   currentPointer: {fileID: 576227843}
   nextPointer: {fileID: 1772127413}
   nextNextPointer: {fileID: 236633613}
+  popupText: {fileID: 1561720038}
 --- !u!4 &615125220
 Transform:
   m_ObjectHideFlags: 0
@@ -1548,6 +1549,7 @@ GameObject:
   - 223: {fileID: 1561720036}
   - 114: {fileID: 1561720035}
   - 114: {fileID: 1561720034}
+  - 114: {fileID: 1561720038}
   m_Layer: 5
   m_Name: GUI
   m_TagString: Untagged
@@ -1633,6 +1635,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1561720038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1561720033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 642642e2ab21a4505962e5ee0c57ebc2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1561720033}
 --- !u!1 &1739757086
 GameObject:
   m_ObjectHideFlags: 0
