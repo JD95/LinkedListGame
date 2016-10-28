@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -38,12 +39,33 @@ public class GameLinkedList
     }
 }
 
+/* Class: Command Stack
+* Command Stack works as follows....
+* Contains an undoStack that will push the states of the objects affected by an action.
+* Once the 
+* 
+*/
+
+/*
+public class CommandStack {
+	Stack undoStack;
+	//Stack redoStack;
+
+	public CommandStack(){
+		undoStack = new Stack ();
+	}
+
+
+}
+*/
 
 public class GameBoard : MonoBehaviour {
 
     private const int numStartingNodes = 10;
 	private GameObject[,] board = new GameObject[10, 10];
     private System.Random rand = new System.Random();
+	//private CommandStack undoStack = new CommandStack();
+	private GameObject previousState;
 
     private static List<GameNode> newElements = new List<GameNode>();
 
@@ -77,6 +99,15 @@ public class GameBoard : MonoBehaviour {
         currentPointer.setNodeActive(true);
         if (nextPointer.isActive) nextPointer.setNodeActive(true);
         if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
+
+		if (Input.GetKeyDown(KeyCode.A)) {
+			copyState();
+            Debug.Log("Gameboard State Copied");
+		}
+        if (Input.GetKeyDown(KeyCode.D)){
+            undoAction();
+            Debug.Log("GameBoard State Undone");
+        }
     }
 
     public static void lineDrawing(GameNode selectedCube)
@@ -117,6 +148,7 @@ public class GameBoard : MonoBehaviour {
 		// load the prefab "NodeCube" and create one on the board
 		board [x, z] = Instantiate(Resources.Load("NodeCube")) as GameObject;
 		board [x, z].transform.position = new Vector3 (x-5,0,z-5);
+        board[x, z].transform.parent = gameObject.transform;
 
         var nodeText = board[x, z].GetComponentInChildren<Text>() as Text;
 
@@ -217,4 +249,15 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.sound.Play();
         }
     }
+
+	public void undoAction(){
+        //For the undo funcction to work, there must be an "action stack" 
+        previousState.SetActive(true);
+        Destroy(this.gameObject);
+    }
+
+	public void copyState(){
+		previousState = Instantiate (gameObject);
+        previousState.SetActive(false);
+	}
 }
