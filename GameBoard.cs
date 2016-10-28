@@ -75,6 +75,8 @@ public class GameBoard : MonoBehaviour {
     public NodePointer nextPointer;
     public NodePointer nextNextPointer;
 
+	public AddPopupText popupText;
+
     private static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
 
@@ -152,6 +154,8 @@ public class GameBoard : MonoBehaviour {
 
         var nodeText = board[x, z].GetComponentInChildren<Text>() as Text;
 
+		board [x, z].GetComponent<GameNode> ().popupText = popupText;
+
         nodeText.text = val.ToString();
 
         board[x, z].SetActive(false);
@@ -201,12 +205,14 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
+		popupText.makePopup ("You created a new node!");
     }
 
     private void moveToNull()
     {
         currentPointer.togglePointer();
         nullPointer.toggleNode();
+		popupText.makePopup ("Null - End of list!");
     }
 
     public void moveCurrentPointer()
@@ -219,6 +225,7 @@ public class GameBoard : MonoBehaviour {
         {
             currentPointer.pointToAndActivate(currentPointer.node.next);
             currentPointer.sound.Play();
+			popupText.makePopup ("You advanced current pointer by one!");
         }
     }
 
@@ -233,6 +240,7 @@ public class GameBoard : MonoBehaviour {
             nextPointer.pointTo(currentPointer.node.next);
             nextPointer.togglePointer();
             nextPointer.sound.Play();
+			popupText.makePopup ("You toggled next pointer!");
         }
     }
 
@@ -247,6 +255,7 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.pointTo(currentPointer.node.next.next);
             nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
+			popupText.makePopup ("You toggled next next pointer!");
         }
     }
 
