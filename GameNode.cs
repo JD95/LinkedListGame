@@ -5,12 +5,13 @@ public class GameNode : MonoBehaviour {
 
     public GameObject value;
     public GameNode next;
-
+    
     public GameObject deleteButton;
     public GameObject newElementLight;
     public AudioSource newElementSound;
 
-	private float distance = 45.9f;
+    public float lineWidth = 0.2f;
+	//private float distance = 45.9f;
 	public AddPopupText popupText;
 
 
@@ -63,6 +64,7 @@ public class GameNode : MonoBehaviour {
     void drawArrow(Vector3 target)
     {
         LineRenderer lr = value.GetComponent<LineRenderer>();
+        lr.SetWidth(lineWidth, lineWidth);
         lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
         lr.SetPosition(0, value.transform.position);
         lr.SetPosition(1, target);
