@@ -45,6 +45,7 @@ public class NodePointer : MonoBehaviour
         {
             nullPointer.toggleNode();
             setNodeActive(false);
+			spotlight.GetComponent<Light> ().color = new Color (100,100,100);
         }
         else
         {
