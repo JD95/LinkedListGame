@@ -220,6 +220,7 @@ public class GameBoard : MonoBehaviour {
         if (currentPointer.node.next == null)
         {
             moveToNull();
+			Debug.Log ("move to null");
         }
         else
         {
