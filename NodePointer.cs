@@ -13,9 +13,10 @@ public class NodePointer : MonoBehaviour
     private float distance = 45.9f;
 
     public void Update()
-    {   }
+    { }
 
-    public NodePointer() { }
+    public NodePointer()
+    { }
 
     public NodePointer(GameNode ptr, GameObject light, AudioSource sound)
     {
