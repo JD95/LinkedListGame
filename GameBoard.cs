@@ -66,6 +66,7 @@ public class GameBoard : MonoBehaviour {
     private System.Random rand = new System.Random();
 	//private CommandStack undoStack = new CommandStack();
 	private GameObject previousState;
+    private static bool boardGen = false;
 
     private static List<GameNode> newElements = new List<GameNode>();
 
@@ -83,7 +84,8 @@ public class GameBoard : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-        genNodes();
+        if(!boardGen)
+            genNodes();
 
         currentPointer.pointToAndActivate(nodes.first);
 
@@ -195,6 +197,7 @@ public class GameBoard : MonoBehaviour {
                 nodes.last = nodes.last.next;
             }
         }
+        boardGen = true;
     }
 
     public void addNewNode()
@@ -263,11 +266,17 @@ public class GameBoard : MonoBehaviour {
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
         previousState.SetActive(true);
+        //previousState.name = this.gameObject.name;
+        foreach (Transform child in this.transform)
+        {
+            Destroy(child.gameObject);
+        }
         Destroy(this.gameObject);
     }
 
 	public void copyState(){
 		previousState = Instantiate (gameObject);
         previousState.SetActive(false);
-	}
+        previousState.name = gameObject.name;
+    }
 }
