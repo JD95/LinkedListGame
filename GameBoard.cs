@@ -105,10 +105,12 @@ public class GameBoard : MonoBehaviour {
 
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
-        nodes.first.nextStack.Push((GameNode)nodes.first.next);
 
+        nodes.first.nextStack.Push((GameNode)nodes.first.next);
+		/*
         nodes.first.actionID = 1;
         actionCount = 1;
+        */
 
 
     }
@@ -209,6 +211,7 @@ public class GameBoard : MonoBehaviour {
                 lineNode.next = selectedNode;
                 actionCount++;
                 lineNode.nextStack.Push((GameNode) selectedNode);
+				lineNode.oldID.Push (lineNode.actionID);
                 lineNode.actionID = actionCount;
             }
 
@@ -285,11 +288,7 @@ public class GameBoard : MonoBehaviour {
         node.actionID = actionCount;
         //Debug.Log(nodes.last.actionID);
         //popupText.makePopup("You created a new node!");
-		//popupText.makePopup ("You created a new node!");
-
-        actionCount++;
-        //node.actionID = actionCount;
-        //Debug.Log(actionCount);
+		popupText.makePopup ("You created a new node!");
     }
 
     private void moveToNull()
@@ -350,19 +349,27 @@ public class GameBoard : MonoBehaviour {
         if (actionCount == 0)
             return;
 
+		for (int i = newElements.Count - 1; i > 0; i--) {
+			if (newElements [i].actionID == actionCount) {
+				newElements [i].undo (ref actionCount);
+				break;
+			}
+		}
+
+
         GameNode current = nodes.first;
-        foreach (GameNode element in newElements)
+        /*foreach (GameNode element in newElements)
         {
             element.undo(ref actionCount);
             //newElements.Remove(element);
         }
-
+		*/
 
         while (current != null) //goes through all of the nodes and undo them accordingly.
         {
-            current.undo(actionCount);
+            current.undo(ref actionCount);
             current = current.next;
-            actionCount--;
+            //actionCount--;
         }
     }
 

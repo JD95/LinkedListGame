@@ -17,6 +17,11 @@ public class StartGame : MonoBehaviour {
 
     public void startGame()
     {
-        SceneManager.LoadScene("NodeGenTesting");
+		SceneManager.LoadScene("Level1/Level1");
     }
+
+	public void startFreePlay()
+	{
+		SceneManager.LoadScene("NodeGenTesting");
+	}
 }

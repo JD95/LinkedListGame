@@ -68,6 +68,8 @@ public class NodePointer : MonoBehaviour
         node = otherNode;
 
         if (isCurrentPointer) node.value.GetComponent<GameNode>().setNodeButtonActive(false);
+
+		//Push to the gamenode stack
     }
 
     public void pointToAndActivate(GameNode otherNode)

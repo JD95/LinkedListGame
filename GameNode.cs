@@ -14,12 +14,12 @@ public class GameNode : MonoBehaviour {
 	//private float distance = 45.9f;
 	public AddPopupText popupText;
     public Stack nextStack;
+	public Stack oldID;
     public int actionID;
 
 	void Start () {
         nextStack = new Stack();
-
-        actionID = 0;
+		oldID = new Stack ();
 	}
 	
 	void Update () {
@@ -86,35 +86,30 @@ public class GameNode : MonoBehaviour {
     {
         Debug.Log("My: " + actionID);
         Debug.Log("Board: " + action);
-    }
+		if (actionID == action) // check if this is the current action to be undone.
+		{
+			if (nextStack.Count == 0)
+			{ //Basically if you just recently created this object
 
-    public void undo(int action)
-    {
+				action--;
+				Destroy(gameObject);
+				return;
+			}
 
-        if (actionID == action) // check if this is the current action to be undone.
-        {
-            if (nextStack.Count == 0)
-            { //Basically if you just recently created this object
+			nextStack.Pop();
 
-                action--;
-                Destroy(gameObject);
-                return;
-            }
+			if (nextStack.Count > 0)
+				next = (GameNode)nextStack.Peek(); //point to the previous node.
+			else
+				next = null;
 
-            nextStack.Pop();
+			action--;
+			actionID = (int)oldID.Pop ();
 
-            if (nextStack.Count > 0)
-                next = (GameNode)nextStack.Peek(); //point to the previous node.
-            else
-                next = null;
+		}
 
-            action--;
+		//nextStack.Pop();
+		//next = (GameNode)nextStack.Peek(); //point to the previous node.
 
-                Destroy(gameObject);
-            }
-
-            nextStack.Pop();
-            next = (GameNode)nextStack.Peek(); //point to the previous node.
-
-        }
+	}
 }
