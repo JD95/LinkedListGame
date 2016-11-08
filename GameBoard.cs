@@ -78,6 +78,7 @@ public class GameBoard : MonoBehaviour {
 
 	public AddPopupText popupText;
 
+    public static int actionCount;
     private static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
 
@@ -95,6 +96,10 @@ public class GameBoard : MonoBehaviour {
 
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
+        nodes.first.nextStack.Push((GameNode)nodes.first.next);
+        nodes.first.actionID = 1;
+        actionCount = 1;
+
     }
 
     // Update is called once per frame
@@ -104,6 +109,7 @@ public class GameBoard : MonoBehaviour {
         if (nextPointer.isActive) nextPointer.setNodeActive(true);
         if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
 
+        /*
 		if (Input.GetKeyDown(KeyCode.A)) {
 			copyState();
             Debug.Log("Gameboard State Copied");
@@ -112,6 +118,7 @@ public class GameBoard : MonoBehaviour {
             undoAction();
             Debug.Log("GameBoard State Undone");
         }
+        */
     }
 
     public static void lineDrawing(GameNode selectedCube)
@@ -140,6 +147,9 @@ public class GameBoard : MonoBehaviour {
             {
                 Debug.Log("Nodes connected!");
                 lineNode.next = selectedNode;
+                actionCount++;
+                lineNode.nextStack.Push((GameNode) selectedNode);
+                lineNode.actionID = actionCount;
             }
 
             drawCube = null;
@@ -197,6 +207,8 @@ public class GameBoard : MonoBehaviour {
                 nodes.last = nodes.last.next;
             }
         }
+
+        //nodes.first.nextStack.Push((GameNode)nodes.first.next);
         boardGen = true;
     }
 
@@ -208,7 +220,11 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
-		popupText.makePopup ("You created a new node!");
+		//popupText.makePopup ("You created a new node!");
+
+        actionCount++;
+        //node.actionID = actionCount;
+        //Debug.Log(actionCount);
     }
 
     private void moveToNull()
@@ -264,18 +280,36 @@ public class GameBoard : MonoBehaviour {
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
-        previousState.SetActive(true);
-        //previousState.name = this.gameObject.name;
+        /*  if (actionCount == 0)
+            return;
+
         foreach (Transform child in this.transform)
         {
-            Destroy(child.gameObject);
+           if (child.name == "NodeCube(Clone)")
+           {
+               GameNode current = child.GetComponent<GameNode>();
+               current.undo(ref actionCount);
+           }
         }
-        Destroy(this.gameObject);
+        */
+        
+        if (actionCount == 0)
+            return;
+
+        GameNode current = nodes.first;
+
+        while (current != null) //goes through all of the nodes and undo them accordingly.
+        {
+            current.undo(actionCount);
+            current = current.next;
+            actionCount--;
+        }
     }
 
+    /*
 	public void copyState(){
 		previousState = Instantiate (gameObject);
         previousState.SetActive(false);
         previousState.name = gameObject.name;
-    }
+    }*/
 }

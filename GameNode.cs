@@ -13,9 +13,12 @@ public class GameNode : MonoBehaviour {
     public float lineWidth = 0.2f;
 	//private float distance = 45.9f;
 	public AddPopupText popupText;
+    public Stack nextStack;
+    public int actionID;
 
-
-	void Start () {	
+	void Start () {
+        nextStack = new Stack();
+        actionID = 0;
 	}
 	
 	void Update () {
@@ -68,5 +71,19 @@ public class GameNode : MonoBehaviour {
         lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
         lr.SetPosition(0, value.transform.position);
         lr.SetPosition(1, target);
+    }
+    
+    public void undo(int action)
+    {
+        if (actionID == action) // check if this is the current action to be undone.
+        {
+            if (nextStack.Count == 0)
+            { //Basically if you just recently created this object
+                Destroy(gameObject);
+            }
+
+            nextStack.Pop();
+            next = (GameNode)nextStack.Peek(); //point to the previous node.
+        }
     }
 }
