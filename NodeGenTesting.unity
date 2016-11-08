@@ -228,6 +228,11 @@ Prefab:
       propertyPath: nullPointer
       value: 
       objectReference: {fileID: 1943519676}
+    - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: BypassListenerEffects
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
   m_IsPrefabParent: 0
@@ -787,6 +792,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114000010637793790, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: node
+      value: 
+      objectReference: {fileID: 729598964}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
   m_IsPrefabParent: 0
@@ -927,6 +937,12 @@ Transform:
   m_PrefabParentObject: {fileID: 4000010333289486, guid: b2f33869a714d944c98466eefcecaa9d,
     type: 2}
   m_PrefabInternal: {fileID: 1314250946}
+--- !u!114 &729598964 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114000013409117098, guid: b2f33869a714d944c98466eefcecaa9d,
+    type: 2}
+  m_PrefabInternal: {fileID: 1314250946}
+  m_Script: {fileID: 11500000, guid: d4247cbdfa783b949ae0f2fcb2f2a0e9, type: 3}
 --- !u!1 &855199122
 GameObject:
   m_ObjectHideFlags: 0
@@ -1413,6 +1429,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114000013409117098, guid: b2f33869a714d944c98466eefcecaa9d,
+        type: 2}
+      propertyPath: value
+      value: 
+      objectReference: {fileID: 729598962}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b2f33869a714d944c98466eefcecaa9d, type: 2}
   m_IsPrefabParent: 0

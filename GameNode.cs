@@ -37,9 +37,10 @@ public class GameNode : MonoBehaviour {
 
 		if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
 			drawArrow (next.value.gameObject.transform.position);
-			Debug.Log (next.value.transform.gameObject.name);
+			//Debug.Log (next.value.transform.gameObject.name);
 			GetComponent<LineRenderer> ().enabled = true;
 		} else {
+			// make
 			GetComponent<LineRenderer> ().enabled = false;
 		}
 
@@ -48,6 +49,7 @@ public class GameNode : MonoBehaviour {
 
 	public void deleteNode(){
 		GameObject.Destroy (this.gameObject);
+
 		popupText.makePopup ("You deleted a node!");
 	}
 
