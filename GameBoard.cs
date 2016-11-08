@@ -78,6 +78,7 @@ public class GameBoard : MonoBehaviour {
 
 	public AddPopupText popupText;
 
+    public static int actionCount;
     private static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
 
@@ -95,6 +96,8 @@ public class GameBoard : MonoBehaviour {
 
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
+        nodes.first.nextStack.Push((GameNode)nodes.first.next);
+
     }
 
     // Update is called once per frame
@@ -104,6 +107,7 @@ public class GameBoard : MonoBehaviour {
         if (nextPointer.isActive) nextPointer.setNodeActive(true);
         if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
 
+        /*
 		if (Input.GetKeyDown(KeyCode.A)) {
 			copyState();
             Debug.Log("Gameboard State Copied");
@@ -112,6 +116,7 @@ public class GameBoard : MonoBehaviour {
             undoAction();
             Debug.Log("GameBoard State Undone");
         }
+        */
     }
 
     public static void lineDrawing(GameNode selectedCube)
@@ -140,6 +145,9 @@ public class GameBoard : MonoBehaviour {
             {
                 Debug.Log("Nodes connected!");
                 lineNode.next = selectedNode;
+                actionCount++;
+                lineNode.nextStack.Push((GameNode) selectedNode);
+                lineNode.actionID = actionCount;
             }
 
             drawCube = null;
@@ -208,14 +216,18 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
-		popupText.makePopup ("You created a new node!");
+
+        actionCount++;
+        node.actionID = actionCount;
+        //Debug.Log(nodes.last.actionID);
+        //popupText.makePopup("You created a new node!");
     }
 
     private void moveToNull()
     {
         currentPointer.togglePointer();
         nullPointer.toggleNode();
-		popupText.makePopup ("Null - End of list!");
+		//popupText.makePopup ("Null - End of list!");
     }
 
     public void moveCurrentPointer()
@@ -228,7 +240,7 @@ public class GameBoard : MonoBehaviour {
         {
             currentPointer.pointToAndActivate(currentPointer.node.next);
             currentPointer.sound.Play();
-			popupText.makePopup ("You advanced current pointer by one!");
+			//popupText.makePopup ("You advanced current pointer by one!");
         }
     }
 
@@ -243,7 +255,7 @@ public class GameBoard : MonoBehaviour {
             nextPointer.pointTo(currentPointer.node.next);
             nextPointer.togglePointer();
             nextPointer.sound.Play();
-			popupText.makePopup ("You toggled next pointer!");
+			//popupText.makePopup ("You toggled next pointer!");
         }
     }
 
@@ -258,24 +270,27 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.pointTo(currentPointer.node.next.next);
             nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
-			popupText.makePopup ("You toggled next next pointer!");
+			//popupText.makePopup ("You toggled next next pointer!");
         }
     }
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
-        previousState.SetActive(true);
-        //previousState.name = this.gameObject.name;
-        foreach (Transform child in this.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        Destroy(this.gameObject);
-    }
+        if (actionCount == 0)
+            return;
 
-	public void copyState(){
-		previousState = Instantiate (gameObject);
-        previousState.SetActive(false);
-        previousState.name = gameObject.name;
+        GameNode current = nodes.first;
+        foreach (GameNode element in newElements)
+        {
+            element.undo(ref actionCount);
+            //newElements.Remove(element);
+        }
+        
+        while (current != null) //goes through all of the nodes and undo them accordingly.
+        {
+            current.undo(ref actionCount);
+            current = current.next;
+            //actionCount--;
+        }
     }
 }
