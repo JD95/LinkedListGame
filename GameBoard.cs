@@ -37,27 +37,23 @@ public class GameLinkedList
 
         return searchNode;
     }
+
+    public int length()
+    {
+        int count = 0;
+        var searchNode = first;
+
+        while (searchNode != null)
+        {
+            searchNode = searchNode.next;
+            count++;
+        }
+
+        return count;
+    }
 }
 
-/* Class: Command Stack
-* Command Stack works as follows....
-* Contains an undoStack that will push the states of the objects affected by an action.
-* Once the 
-* 
-*/
 
-/*
-public class CommandStack {
-	Stack undoStack;
-	//Stack redoStack;
-
-	public CommandStack(){
-		undoStack = new Stack ();
-	}
-
-
-}
-*/
 
 public class LightColors{
 	public static Color green = new Color (0,1,0,1);
@@ -69,11 +65,13 @@ public class LightColors{
 public class GameBoard : MonoBehaviour {
 
     private const int numStartingNodes = 10;
-	private GameObject[,] board = new GameObject[10, 10];
+    public GameObject[] initial_board = new GameObject[10];
+	public GameObject[,] board = new GameObject[10, 10];
     private System.Random rand = new System.Random();
 	//private CommandStack undoStack = new CommandStack();
 	private GameObject previousState;
-    private static bool boardGen = false;
+    public static bool boardGen = false;
+    public bool fillBoard = false;
 
     private static List<GameNode> newElements = new List<GameNode>();
 
@@ -89,10 +87,14 @@ public class GameBoard : MonoBehaviour {
     private static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
 
+    public WinCondition level;
+
     // Use this for initialization
     void Start()
     {
-        if(!boardGen)
+        boardGen = !fillBoard;
+
+        if (!boardGen)
             genNodes();
 
         currentPointer.pointToAndActivate(nodes.first);
@@ -109,40 +111,76 @@ public class GameBoard : MonoBehaviour {
 
     }
 
+    bool leak(GameObject g)
+    {
+        return !(g == null || nodes.find(g, new List<GameNode>()));
+    }
+
+    public bool noLeaks()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (leak(board[i, j])) return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool emptyBoard()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (board[i, j] != null) return false;
+            }
+        }
+
+        return true;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        currentPointer.setNodeActive(true);
-		if (nextPointer.isActive && nextPointer.node != null){
-			nextPointer.setNodeActive (true);
-			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.green;
-		}
-		if (nextPointer.node == null)
-		{
-			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
-		}
-
-		if (nextNextPointer.isActive && nextPointer.node != null) {
-			nextNextPointer.setNodeActive (true);
-			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.purple;
-
-		}
-
-		if (nextNextPointer.node == null)
-		{
-			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
-		}
-
-        /*
-		if (Input.GetKeyDown(KeyCode.A)) {
-			copyState();
-            Debug.Log("Gameboard State Copied");
-		}
-        if (Input.GetKeyDown(KeyCode.D)){
-            undoAction();
-            Debug.Log("GameBoard State Undone");
+        if (level.win())
+        {
+            Time.timeScale = 0;
+            Debug.Log("You Win!");
         }
-        */
+        else if (level.canProgress())
+        {
+            level.progress();
+        }
+
+        adjustLighting();
+    }
+
+    void adjustLighting()
+    {
+        currentPointer.setNodeActive(true);
+        if (nextPointer.isActive && nextPointer.node != null)
+        {
+            nextPointer.setNodeActive(true);
+            nextPointer.spotlight.GetComponent<Light>().color = LightColors.green;
+        }
+        if (nextPointer.node == null)
+        {
+            nextPointer.spotlight.GetComponent<Light>().color = LightColors.grey;
+        }
+
+        if (nextNextPointer.isActive && nextPointer.node != null)
+        {
+            nextNextPointer.setNodeActive(true);
+            nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.purple;
+        }
+
+        if (nextNextPointer.node == null)
+        {
+            nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.grey;
+        }
     }
 
     public static void lineDrawing(GameNode selectedCube)

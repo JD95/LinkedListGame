@@ -27,20 +27,20 @@ public class GameNode : MonoBehaviour {
 
         if (GameBoard.drawCube == value.GetComponent<GameNode>())
         {
-            Debug.Log("Drawing connection line!");
+            //Debug.Log("Drawing connection line!");
             RaycastHit hit;
 
             // Get the point on the terrain where the mouse is
             Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 1000.0F);
 
-            Debug.Log("Hit " + hit.transform.gameObject.name);
+            //Debug.Log("Hit " + hit.transform.gameObject.name);
 
             drawArrow(hit.point);
         }
 
 		if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
 			drawArrow (next.value.gameObject.transform.position);
-			Debug.Log (next.value.transform.gameObject.name);
+			//Debug.Log (next.value.transform.gameObject.name);
 			GetComponent<LineRenderer> ().enabled = true;
 		} else {
 			GetComponent<LineRenderer> ().enabled = false;
@@ -50,8 +50,9 @@ public class GameNode : MonoBehaviour {
     }
 
 	public void deleteNode(){
-		GameObject.Destroy (this.gameObject);
+        if (popupText == null) Debug.Log("Popup text is null!");
 		popupText.makePopup ("You deleted a node!");
+		GameObject.Destroy (this.gameObject);
 	}
 
     public void setNodeButtonActive(bool b)
