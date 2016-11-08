@@ -13,9 +13,13 @@ public class GameNode : MonoBehaviour {
     public float lineWidth = 0.2f;
 	//private float distance = 45.9f;
 	public AddPopupText popupText;
+    public Stack nextStack;
+    public int actionID;
 
+	void Start () {
+        nextStack = new Stack();
 
-	void Start () {	
+        actionID = 0;
 	}
 	
 	void Update () {
@@ -24,13 +28,13 @@ public class GameNode : MonoBehaviour {
 
         if (GameBoard.drawCube == value.GetComponent<GameNode>())
         {
-            Debug.Log("Drawing connection line!");
+            //Debug.Log("Drawing connection line!");
             RaycastHit hit;
 
             // Get the point on the terrain where the mouse is
             Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 1000.0F);
 
-            Debug.Log("Hit " + hit.transform.gameObject.name);
+            //Debug.Log("Hit " + hit.transform.gameObject.name);
 
             drawArrow(hit.point);
         }
@@ -48,9 +52,9 @@ public class GameNode : MonoBehaviour {
     }
 
 	public void deleteNode(){
-		GameObject.Destroy (this.gameObject);
-
+        if (popupText == null) Debug.Log("Popup text is null!");
 		popupText.makePopup ("You deleted a node!");
+		GameObject.Destroy (this.gameObject);
 	}
 
     public void setNodeButtonActive(bool b)
@@ -76,4 +80,41 @@ public class GameNode : MonoBehaviour {
         lr.SetPosition(0, value.transform.position);
         lr.SetPosition(1, target);
     }
+
+
+    public void undo(ref int action)
+    {
+        Debug.Log("My: " + actionID);
+        Debug.Log("Board: " + action);
+    }
+
+    public void undo(int action)
+    {
+
+        if (actionID == action) // check if this is the current action to be undone.
+        {
+            if (nextStack.Count == 0)
+            { //Basically if you just recently created this object
+
+                action--;
+                Destroy(gameObject);
+                return;
+            }
+
+            nextStack.Pop();
+
+            if (nextStack.Count > 0)
+                next = (GameNode)nextStack.Peek(); //point to the previous node.
+            else
+                next = null;
+
+            action--;
+
+                Destroy(gameObject);
+            }
+
+            nextStack.Pop();
+            next = (GameNode)nextStack.Peek(); //point to the previous node.
+
+        }
 }

@@ -37,27 +37,23 @@ public class GameLinkedList
 
         return searchNode;
     }
+
+    public int length()
+    {
+        int count = 0;
+        var searchNode = first;
+
+        while (searchNode != null)
+        {
+            searchNode = searchNode.next;
+            count++;
+        }
+
+        return count;
+    }
 }
 
-/* Class: Command Stack
-* Command Stack works as follows....
-* Contains an undoStack that will push the states of the objects affected by an action.
-* Once the 
-* 
-*/
 
-/*
-public class CommandStack {
-	Stack undoStack;
-	//Stack redoStack;
-
-	public CommandStack(){
-		undoStack = new Stack ();
-	}
-
-
-}
-*/
 
 public class LightColors{
 	public static Color green = new Color (0,1,0,1);
@@ -69,11 +65,13 @@ public class LightColors{
 public class GameBoard : MonoBehaviour {
 
     private const int numStartingNodes = 10;
-	private GameObject[,] board = new GameObject[10, 10];
+    public GameObject[] initial_board = new GameObject[10];
+	public GameObject[,] board = new GameObject[10, 10];
     private System.Random rand = new System.Random();
 	//private CommandStack undoStack = new CommandStack();
 	private GameObject previousState;
-    private static bool boardGen = false;
+    public static bool boardGen = false;
+    public bool fillBoard = false;
 
     private static List<GameNode> newElements = new List<GameNode>();
 
@@ -85,13 +83,18 @@ public class GameBoard : MonoBehaviour {
 
 	public AddPopupText popupText;
 
+    public static int actionCount;
     private static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
+
+    public WinCondition level;
 
     // Use this for initialization
     void Start()
     {
-        if(!boardGen)
+        boardGen = !fillBoard;
+
+        if (!boardGen)
             genNodes();
 
         currentPointer.pointToAndActivate(nodes.first);
@@ -102,32 +105,71 @@ public class GameBoard : MonoBehaviour {
 
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
+        nodes.first.nextStack.Push((GameNode)nodes.first.next);
+
+        nodes.first.actionID = 1;
+        actionCount = 1;
+
+
+    }
+
+    bool leak(GameObject g)
+    {
+        return !(g == null || nodes.find(g, new List<GameNode>()));
+    }
+
+    public bool noLeaks()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (leak(board[i, j])) return false;
+            }
+        }
+
+        return true;
+    }
+
+    public bool emptyBoard()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int j = 0; j < 10; j++)
+            {
+                if (board[i, j] != null) return false;
+            }
+        }
+
+        return true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        currentPointer.setNodeActive(true);
-		if (nextPointer.isActive && nextPointer.node != null){
-			nextPointer.setNodeActive (true);
-			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.green;
-		}
-		if (nextPointer.node == null)
-		{
-			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
-		}
+        if (level.win())
+        {
+            Time.timeScale = 0;
+            Debug.Log("You Win!");
+        }
+        else if (level.canProgress())
+        {
+            level.progress();
+        }
 
-		if (nextNextPointer.isActive && nextPointer.node != null) {
-			nextNextPointer.setNodeActive (true);
-			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.purple;
+        adjustLighting();
+    }
 
-		}
+    void adjustLighting() { 
 
-		if (nextNextPointer.node == null)
-		{
-			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
-		}
+        if (nextNextPointer.isActive && nextPointer.node != null)
+        {
+            nextNextPointer.setNodeActive(true);
+            nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.purple;
+        }
 
+
+        /*
 		if (Input.GetKeyDown(KeyCode.A)) {
 			copyState();
             Debug.Log("Gameboard State Copied");
@@ -136,6 +178,7 @@ public class GameBoard : MonoBehaviour {
             undoAction();
             Debug.Log("GameBoard State Undone");
         }
+        */
     }
 
     public static void lineDrawing(GameNode selectedCube)
@@ -164,6 +207,9 @@ public class GameBoard : MonoBehaviour {
             {
                 Debug.Log("Nodes connected!");
                 lineNode.next = selectedNode;
+                actionCount++;
+                lineNode.nextStack.Push((GameNode) selectedNode);
+                lineNode.actionID = actionCount;
             }
 
             drawCube = null;
@@ -221,6 +267,8 @@ public class GameBoard : MonoBehaviour {
                 nodes.last = nodes.last.next;
             }
         }
+
+        //nodes.first.nextStack.Push((GameNode)nodes.first.next);
         boardGen = true;
     }
 
@@ -232,14 +280,23 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
-		popupText.makePopup ("You created a new node!");
+
+        actionCount++;
+        node.actionID = actionCount;
+        //Debug.Log(nodes.last.actionID);
+        //popupText.makePopup("You created a new node!");
+		//popupText.makePopup ("You created a new node!");
+
+        actionCount++;
+        //node.actionID = actionCount;
+        //Debug.Log(actionCount);
     }
 
     private void moveToNull()
     {
         currentPointer.togglePointer();
         nullPointer.toggleNode();
-		popupText.makePopup ("Null - End of list!");
+		//popupText.makePopup ("Null - End of list!");
     }
 
     public void moveCurrentPointer()
@@ -253,7 +310,7 @@ public class GameBoard : MonoBehaviour {
         {
             currentPointer.pointToAndActivate(currentPointer.node.next);
             currentPointer.sound.Play();
-			popupText.makePopup ("You advanced current pointer by one!");
+			//popupText.makePopup ("You advanced current pointer by one!");
         }
     }
 
@@ -268,7 +325,7 @@ public class GameBoard : MonoBehaviour {
             nextPointer.pointTo(currentPointer.node.next);
             nextPointer.togglePointer();
             nextPointer.sound.Play();
-			popupText.makePopup ("You toggled next pointer!");
+			//popupText.makePopup ("You toggled next pointer!");
         }
     }
 
@@ -283,24 +340,36 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.pointTo(currentPointer.node.next.next);
             nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
-			popupText.makePopup ("You toggled next next pointer!");
+			//popupText.makePopup ("You toggled next next pointer!");
         }
     }
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
-        previousState.SetActive(true);
-        //previousState.name = this.gameObject.name;
-        foreach (Transform child in this.transform)
+
+        if (actionCount == 0)
+            return;
+
+        GameNode current = nodes.first;
+        foreach (GameNode element in newElements)
         {
-            Destroy(child.gameObject);
+            element.undo(ref actionCount);
+            //newElements.Remove(element);
         }
-        Destroy(this.gameObject);
+
+
+        while (current != null) //goes through all of the nodes and undo them accordingly.
+        {
+            current.undo(actionCount);
+            current = current.next;
+            actionCount--;
+        }
     }
 
+    /*
 	public void copyState(){
 		previousState = Instantiate (gameObject);
         previousState.SetActive(false);
         previousState.name = gameObject.name;
-    }
+    }*/
 }
