@@ -59,6 +59,13 @@ public class CommandStack {
 }
 */
 
+public class LightColors{
+	public static Color green = new Color (0,1,0,1);
+	public static Color grey = new Color (0.5f, 0.5f, 0.5f, 1f);
+	public static Color purple = new Color (1,0,1,1);
+
+}
+
 public class GameBoard : MonoBehaviour {
 
     private const int numStartingNodes = 10;
@@ -97,6 +104,11 @@ public class GameBoard : MonoBehaviour {
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
         nodes.first.nextStack.Push((GameNode)nodes.first.next);
+<<<<<<< HEAD
+=======
+        nodes.first.actionID = 1;
+        actionCount = 1;
+>>>>>>> origin/master
 
     }
 
@@ -104,9 +116,29 @@ public class GameBoard : MonoBehaviour {
     void Update()
     {
         currentPointer.setNodeActive(true);
-        if (nextPointer.isActive) nextPointer.setNodeActive(true);
-        if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
+		if (nextPointer.isActive && nextPointer.node != null){
+			nextPointer.setNodeActive (true);
+			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.green;
+		}
+		if (nextPointer.node == null)
+		{
+			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
+		}
 
+		if (nextNextPointer.isActive && nextPointer.node != null) {
+			nextNextPointer.setNodeActive (true);
+			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.purple;
+
+<<<<<<< HEAD
+=======
+		}
+
+		if (nextNextPointer.node == null)
+		{
+			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
+		}
+
+>>>>>>> origin/master
         /*
 		if (Input.GetKeyDown(KeyCode.A)) {
 			copyState();
@@ -205,6 +237,8 @@ public class GameBoard : MonoBehaviour {
                 nodes.last = nodes.last.next;
             }
         }
+
+        //nodes.first.nextStack.Push((GameNode)nodes.first.next);
         boardGen = true;
     }
 
@@ -216,11 +250,19 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
+<<<<<<< HEAD
 
         actionCount++;
         node.actionID = actionCount;
         //Debug.Log(nodes.last.actionID);
         //popupText.makePopup("You created a new node!");
+=======
+		//popupText.makePopup ("You created a new node!");
+
+        actionCount++;
+        //node.actionID = actionCount;
+        //Debug.Log(actionCount);
+>>>>>>> origin/master
     }
 
     private void moveToNull()
@@ -235,6 +277,7 @@ public class GameBoard : MonoBehaviour {
         if (currentPointer.node.next == null)
         {
             moveToNull();
+			Debug.Log ("move to null");
         }
         else
         {
@@ -276,6 +319,7 @@ public class GameBoard : MonoBehaviour {
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
+<<<<<<< HEAD
         if (actionCount == 0)
             return;
 
@@ -293,4 +337,38 @@ public class GameBoard : MonoBehaviour {
             //actionCount--;
         }
     }
+=======
+        /*  if (actionCount == 0)
+            return;
+
+        foreach (Transform child in this.transform)
+        {
+           if (child.name == "NodeCube(Clone)")
+           {
+               GameNode current = child.GetComponent<GameNode>();
+               current.undo(ref actionCount);
+           }
+        }
+        */
+        
+        if (actionCount == 0)
+            return;
+
+        GameNode current = nodes.first;
+
+        while (current != null) //goes through all of the nodes and undo them accordingly.
+        {
+            current.undo(actionCount);
+            current = current.next;
+            actionCount--;
+        }
+    }
+
+    /*
+	public void copyState(){
+		previousState = Instantiate (gameObject);
+        previousState.SetActive(false);
+        previousState.name = gameObject.name;
+    }*/
+>>>>>>> origin/master
 }

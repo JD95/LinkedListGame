@@ -27,9 +27,11 @@ public class NodePointer : MonoBehaviour
 
     public void setNodeActive(bool active)
     {
-        spotlight.SetActive(active);
-        node.value.SetActive(active);
-        isActive = active;
+		if (node != null) {
+			spotlight.SetActive (active);
+			node.value.SetActive (active);
+			isActive = active;
+		}
     }
 
     public void toggleNode()
@@ -43,6 +45,7 @@ public class NodePointer : MonoBehaviour
         {
             nullPointer.toggleNode();
             setNodeActive(false);
+			spotlight.GetComponent<Light> ().color = new Color (100,100,100);
         }
         else
         {
