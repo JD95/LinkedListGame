@@ -18,7 +18,10 @@ public class GameNode : MonoBehaviour {
 
 	void Start () {
         nextStack = new Stack();
+<<<<<<< HEAD
+=======
         actionID = 0;
+>>>>>>> origin/master
 	}
 	
 	void Update () {
@@ -79,17 +82,40 @@ public class GameNode : MonoBehaviour {
         lr.SetPosition(1, target);
     }
     
+<<<<<<< HEAD
+    public void undo(ref int action)
+    {
+        Debug.Log("My: " + actionID);
+        Debug.Log("Board: " + action);
+=======
     public void undo(int action)
     {
+>>>>>>> origin/master
         if (actionID == action) // check if this is the current action to be undone.
         {
             if (nextStack.Count == 0)
             { //Basically if you just recently created this object
+<<<<<<< HEAD
+                action--;
+                Destroy(gameObject);
+                return;
+            }
+
+            nextStack.Pop();
+
+            if (nextStack.Count > 0)
+                next = (GameNode)nextStack.Peek(); //point to the previous node.
+            else
+                next = null;
+
+            action--;
+=======
                 Destroy(gameObject);
             }
 
             nextStack.Pop();
             next = (GameNode)nextStack.Peek(); //point to the previous node.
+>>>>>>> origin/master
         }
     }
 }

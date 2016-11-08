@@ -106,8 +106,11 @@ public class GameBoard : MonoBehaviour {
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
         nodes.first.nextStack.Push((GameNode)nodes.first.next);
+<<<<<<< HEAD
+=======
         nodes.first.actionID = 1;
         actionCount = 1;
+>>>>>>> origin/master
 
     }
 
@@ -158,18 +161,9 @@ public class GameBoard : MonoBehaviour {
         adjustLighting();
     }
 
-    void adjustLighting()
-    {
-        currentPointer.setNodeActive(true);
-        if (nextPointer.isActive && nextPointer.node != null)
-        {
-            nextPointer.setNodeActive(true);
-            nextPointer.spotlight.GetComponent<Light>().color = LightColors.green;
-        }
-        if (nextPointer.node == null)
-        {
-            nextPointer.spotlight.GetComponent<Light>().color = LightColors.grey;
-        }
+<<<<<<< HEAD
+=======
+		}
 
         if (nextNextPointer.isActive && nextPointer.node != null)
         {
@@ -177,9 +171,15 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.purple;
         }
 
-        if (nextNextPointer.node == null)
-        {
-            nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.grey;
+>>>>>>> origin/master
+        /*
+		if (Input.GetKeyDown(KeyCode.A)) {
+			copyState();
+            Debug.Log("Gameboard State Copied");
+		}
+        if (Input.GetKeyDown(KeyCode.D)){
+            undoAction();
+            Debug.Log("GameBoard State Undone");
         }
     }
 
@@ -282,18 +282,26 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
+<<<<<<< HEAD
+
+        actionCount++;
+        node.actionID = actionCount;
+        //Debug.Log(nodes.last.actionID);
+        //popupText.makePopup("You created a new node!");
+=======
 		//popupText.makePopup ("You created a new node!");
 
         actionCount++;
         //node.actionID = actionCount;
         //Debug.Log(actionCount);
+>>>>>>> origin/master
     }
 
     private void moveToNull()
     {
         currentPointer.togglePointer();
         nullPointer.toggleNode();
-		popupText.makePopup ("Null - End of list!");
+		//popupText.makePopup ("Null - End of list!");
     }
 
     public void moveCurrentPointer()
@@ -307,7 +315,7 @@ public class GameBoard : MonoBehaviour {
         {
             currentPointer.pointToAndActivate(currentPointer.node.next);
             currentPointer.sound.Play();
-			popupText.makePopup ("You advanced current pointer by one!");
+			//popupText.makePopup ("You advanced current pointer by one!");
         }
     }
 
@@ -322,7 +330,7 @@ public class GameBoard : MonoBehaviour {
             nextPointer.pointTo(currentPointer.node.next);
             nextPointer.togglePointer();
             nextPointer.sound.Play();
-			popupText.makePopup ("You toggled next pointer!");
+			//popupText.makePopup ("You toggled next pointer!");
         }
     }
 
@@ -337,12 +345,31 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.pointTo(currentPointer.node.next.next);
             nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
-			popupText.makePopup ("You toggled next next pointer!");
+			//popupText.makePopup ("You toggled next next pointer!");
         }
     }
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
+<<<<<<< HEAD
+        if (actionCount == 0)
+            return;
+
+        GameNode current = nodes.first;
+        foreach (GameNode element in newElements)
+        {
+            element.undo(ref actionCount);
+            //newElements.Remove(element);
+        }
+        
+        while (current != null) //goes through all of the nodes and undo them accordingly.
+        {
+            current.undo(ref actionCount);
+            current = current.next;
+            //actionCount--;
+        }
+    }
+=======
         /*  if (actionCount == 0)
             return;
 
@@ -375,4 +402,5 @@ public class GameBoard : MonoBehaviour {
         previousState.SetActive(false);
         previousState.name = gameObject.name;
     }*/
+>>>>>>> origin/master
 }
