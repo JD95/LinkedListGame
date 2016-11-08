@@ -59,6 +59,13 @@ public class CommandStack {
 }
 */
 
+public class LightColors{
+	public static Color green = new Color (0,1,0,1);
+	public static Color grey = new Color (0.5f, 0.5f, 0.5f, 1f);
+	public static Color purple = new Color (1,0,1,1);
+
+}
+
 public class GameBoard : MonoBehaviour {
 
     private const int numStartingNodes = 10;
@@ -106,8 +113,25 @@ public class GameBoard : MonoBehaviour {
     void Update()
     {
         currentPointer.setNodeActive(true);
-        if (nextPointer.isActive) nextPointer.setNodeActive(true);
-        if (nextNextPointer.isActive) nextNextPointer.setNodeActive(true);
+		if (nextPointer.isActive && nextPointer.node != null){
+			nextPointer.setNodeActive (true);
+			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.green;
+		}
+		if (nextPointer.node == null)
+		{
+			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
+		}
+
+		if (nextNextPointer.isActive && nextPointer.node != null) {
+			nextNextPointer.setNodeActive (true);
+			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.purple;
+
+		}
+
+		if (nextNextPointer.node == null)
+		{
+			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
+		}
 
         /*
 		if (Input.GetKeyDown(KeyCode.A)) {
@@ -239,6 +263,7 @@ public class GameBoard : MonoBehaviour {
         if (currentPointer.node.next == null)
         {
             moveToNull();
+			Debug.Log ("move to null");
         }
         else
         {

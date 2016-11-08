@@ -38,10 +38,15 @@ public class GameNode : MonoBehaviour {
             drawArrow(hit.point);
         }
 
-        if (next != null && next.value != null && next.value.transform.gameObject.activeSelf)
-        {
-            drawArrow(next.value.gameObject.transform.position);
-        }
+		if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
+			drawArrow (next.value.gameObject.transform.position);
+			Debug.Log (next.value.transform.gameObject.name);
+			GetComponent<LineRenderer> ().enabled = true;
+		} else {
+			GetComponent<LineRenderer> ().enabled = false;
+		}
+
+
     }
 
 	public void deleteNode(){
