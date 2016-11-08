@@ -106,11 +106,10 @@ public class GameBoard : MonoBehaviour {
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
 
         nodes.first.nextStack.Push((GameNode)nodes.first.next);
-<<<<<<< HEAD
-=======
+
         nodes.first.actionID = 1;
         actionCount = 1;
->>>>>>> origin/master
+
 
     }
 
@@ -161,9 +160,7 @@ public class GameBoard : MonoBehaviour {
         adjustLighting();
     }
 
-<<<<<<< HEAD
-=======
-		}
+    void adjustLighting() { 
 
         if (nextNextPointer.isActive && nextPointer.node != null)
         {
@@ -171,7 +168,7 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.purple;
         }
 
->>>>>>> origin/master
+
         /*
 		if (Input.GetKeyDown(KeyCode.A)) {
 			copyState();
@@ -181,6 +178,7 @@ public class GameBoard : MonoBehaviour {
             undoAction();
             Debug.Log("GameBoard State Undone");
         }
+        */
     }
 
     public static void lineDrawing(GameNode selectedCube)
@@ -282,19 +280,16 @@ public class GameBoard : MonoBehaviour {
         node.newElementSound.Play();
         nodes.last = node;
         newElements.Add(node);
-<<<<<<< HEAD
 
         actionCount++;
         node.actionID = actionCount;
         //Debug.Log(nodes.last.actionID);
         //popupText.makePopup("You created a new node!");
-=======
 		//popupText.makePopup ("You created a new node!");
 
         actionCount++;
         //node.actionID = actionCount;
         //Debug.Log(actionCount);
->>>>>>> origin/master
     }
 
     private void moveToNull()
@@ -351,7 +346,7 @@ public class GameBoard : MonoBehaviour {
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
-<<<<<<< HEAD
+
         if (actionCount == 0)
             return;
 
@@ -361,32 +356,7 @@ public class GameBoard : MonoBehaviour {
             element.undo(ref actionCount);
             //newElements.Remove(element);
         }
-        
-        while (current != null) //goes through all of the nodes and undo them accordingly.
-        {
-            current.undo(ref actionCount);
-            current = current.next;
-            //actionCount--;
-        }
-    }
-=======
-        /*  if (actionCount == 0)
-            return;
 
-        foreach (Transform child in this.transform)
-        {
-           if (child.name == "NodeCube(Clone)")
-           {
-               GameNode current = child.GetComponent<GameNode>();
-               current.undo(ref actionCount);
-           }
-        }
-        */
-        
-        if (actionCount == 0)
-            return;
-
-        GameNode current = nodes.first;
 
         while (current != null) //goes through all of the nodes and undo them accordingly.
         {
@@ -402,5 +372,4 @@ public class GameBoard : MonoBehaviour {
         previousState.SetActive(false);
         previousState.name = gameObject.name;
     }*/
->>>>>>> origin/master
 }

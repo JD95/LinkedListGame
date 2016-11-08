@@ -17,7 +17,9 @@ public class Level1Logic : WinCondition {
 
     public override void progress()
     {
+        Debug.Log("Delete the rest of the nodes!");
         firstNode.SetActive(false);
+        firstNode.GetComponent<GameNode>().deleteNode();
         foreach (var node in groupOfNodes)
         {
             node.SetActive(true);
@@ -36,7 +38,7 @@ public class Level1Logic : WinCondition {
 
     // Use this for initialization
     void Start () {
-        Debug.Log("Ping!");
+        Debug.Log("Please delete the node!");
 
         board.board[0, 0] = firstNode;
         board.board[0, 0].GetComponent<GameNode>().popupText = board.GetComponent<AddPopupText>();
