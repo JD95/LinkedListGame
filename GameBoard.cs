@@ -164,23 +164,26 @@ public class GameBoard : MonoBehaviour {
 
     void adjustLighting() { 
 
-        if (nextNextPointer.isActive && nextPointer.node != null)
-        {
-            nextNextPointer.setNodeActive(true);
-            nextNextPointer.spotlight.GetComponent<Light>().color = LightColors.purple;
-        }
-
-
-        /*
-		if (Input.GetKeyDown(KeyCode.A)) {
-			copyState();
-            Debug.Log("Gameboard State Copied");
+		if (nextPointer.isActive && nextPointer.node != null){
+			nextPointer.setNodeActive (true);
+			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.green;
 		}
-        if (Input.GetKeyDown(KeyCode.D)){
-            undoAction();
-            Debug.Log("GameBoard State Undone");
-        }
-        */
+
+		if (nextPointer.node == null)
+		{
+			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
+		}
+
+		if (nextNextPointer.isActive && nextPointer.node != null) {
+			nextNextPointer.setNodeActive (true);
+			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.purple;
+
+		}
+
+		if (nextNextPointer.node == null) {
+			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
+		}
+
     }
 
     public static void lineDrawing(GameNode selectedCube)

@@ -28,6 +28,7 @@ public class GameNode : MonoBehaviour {
 
         if (GameBoard.drawCube == value.GetComponent<GameNode>())
         {
+			GetComponent<LineRenderer> ().enabled = true;
             //Debug.Log("Drawing connection line!");
             RaycastHit hit;
 
@@ -38,11 +39,11 @@ public class GameNode : MonoBehaviour {
 
             drawArrow(hit.point);
         }
+		else if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
 
-		if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
-			drawArrow (next.value.gameObject.transform.position);
-			//Debug.Log (next.value.transform.gameObject.name);
 			GetComponent<LineRenderer> ().enabled = true;
+			drawArrow (next.value.gameObject.transform.position);
+			Debug.Log (next.value.transform.gameObject.name);
 		} else {
 			// make
 			GetComponent<LineRenderer> ().enabled = false;
