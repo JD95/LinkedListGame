@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using System;
 using System.Linq;
@@ -9,7 +10,7 @@ public class Stage {
 	public Action progress;
 	public string instruction;
 
-	public Stage (Func<bool> p, Action pg, string i){
+	public Stage (string i, Func<bool> p, Action pg){
 		this.progressCheck = p;
 		this.progress = pg;
 		this.instruction = i;
@@ -17,6 +18,8 @@ public class Stage {
 }
 
 public class Level1Logic : WinCondition {
+
+	public Text instructions;
 
     public GameBoard board;
 
@@ -27,6 +30,9 @@ public class Level1Logic : WinCondition {
 	int stage = 0;
 	List<Stage> stages;
 
+	private void setInstructionText(string text){
+		instructions.text = text;
+	}
 
     public override bool canProgress()
     {
@@ -36,6 +42,7 @@ public class Level1Logic : WinCondition {
     public override void progress()
     {
 		stages [stage++].progress ();
+		setInstructionText(stages [stage].instruction);
     }
 
     public override bool win()
@@ -50,7 +57,6 @@ public class Level1Logic : WinCondition {
 
     // Use this for initialization
     void Start () {
-        Debug.Log("Please delete the node!");
 
 		firstNode = board.addNewNodeReturn ();
 
@@ -67,18 +73,20 @@ public class Level1Logic : WinCondition {
 
 		stages = new List<Stage>(){
 			// Stage 1
-			new Stage(
+			new Stage( "Please delete the node",
 				() => !firstNode.isActiveAndEnabled,
 				() => { 
 					firstNode.deleteNode();
 					foreach (var node in groupOfNodes)
 						node.value.SetActive(true);
-				}, "Please delete the node"),
+				}),
 			// Stage 2
-			new Stage(
+			new Stage("Please delete all of the nodes",
 				() => groupOfNodes.Select(n => !n.value.activeSelf).Aggregate(true, (l,r) => l && r),
-				() => { Debug.Log("Winner!"); }, "Please delete all of the nodes")
+				() => { setInstructionText("Winner!"); })
 		};
+
+		setInstructionText(stages [stage].instruction);
 	}
 	
 	// Update is called once per frame
