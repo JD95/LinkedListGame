@@ -6,6 +6,8 @@ public class GameNode : MonoBehaviour {
     public GameObject value;
     public GameNode next;
     
+	public int nodeValue;
+
     public GameObject deleteButton;
     public GameObject newElementLight;
     public AudioSource newElementSound;

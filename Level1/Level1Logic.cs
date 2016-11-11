@@ -7,13 +7,14 @@ using System.Linq;
 public class Stage {
 
 	public Func<bool> progressCheck;
-	public Action progress;
+	public Action setup;
 	public string instruction;
 
-	public Stage (string i, Func<bool> p, Action pg){
-		this.progressCheck = p;
-		this.progress = pg;
-		this.instruction = i;
+	// Creates a new stage for the level
+	public Stage (string instruction, Action setup, Func<bool> progressCondition){
+		this.progressCheck = progressCondition;
+		this.setup = setup;
+		this.instruction = instruction;
 	}
 }
 
@@ -27,7 +28,7 @@ public class Level1Logic : WinCondition {
 
 	public GameNode[] groupOfNodes = new GameNode[3];
 
-	int stage = 0;
+	int stage = -1; // Because we want to progress to stage 0
 	List<Stage> stages;
 
 	private void setInstructionText(string text){
@@ -41,7 +42,8 @@ public class Level1Logic : WinCondition {
 
     public override void progress()
     {
-		stages [stage++].progress ();
+		stage++;
+		stages [stage].setup ();
 		setInstructionText(stages [stage].instruction);
     }
 
@@ -57,36 +59,34 @@ public class Level1Logic : WinCondition {
 
     // Use this for initialization
     void Start () {
-
-		firstNode = board.addNewNodeReturn ();
-
-        for (int i = 0; i < 3; i++)
-        {
-			groupOfNodes [i] = board.addNewNodeReturn ();
-        }
-
-		firstNode.value.SetActive(true);
-        foreach(var node in groupOfNodes)
-        {
-			node.value.SetActive(false);
-        }
-
+		
 		stages = new List<Stage>(){
 			// Stage 1
-			new Stage( "Please delete the node",
-				() => !firstNode.isActiveAndEnabled,
-				() => { 
-					firstNode.deleteNode();
-					foreach (var node in groupOfNodes)
-						node.value.SetActive(true);
-				}),
+			new Stage( "Please delete the node", () => {
+				firstNode = board.addNewNodeReturn ();
+
+				for (int i = 0; i < 3; i++)
+					groupOfNodes [i] = board.addNewNodeReturn ();
+
+				firstNode.value.SetActive(true);
+
+				foreach(var node in groupOfNodes)
+					node.value.SetActive(false);
+
+			}, () => !firstNode.isActiveAndEnabled),
+
 			// Stage 2
-			new Stage("Please delete all of the nodes",
-				() => groupOfNodes.Select(n => !n.value.activeSelf).Aggregate(true, (l,r) => l && r),
-				() => { setInstructionText("Winner!"); })
+			new Stage("Please delete all of the nodes",() => { 
+				firstNode.deleteNode();
+				foreach (var node in groupOfNodes)
+					node.value.SetActive(true);
+			}, () => groupOfNodes.Select(n => !n.value.activeSelf).Aggregate(true, (l,r) => l && r)),
+
+			// Win state
+			new Stage("Winner!", () => {}, () => false)
 		};
 
-		setInstructionText(stages [stage].instruction);
+		progress ();
 	}
 	
 	// Update is called once per frame

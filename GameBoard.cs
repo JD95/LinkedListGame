@@ -51,6 +51,21 @@ public class GameLinkedList
 
         return count;
     }
+
+	public bool listIs(List<int> values){
+		GameNode ptr = first;
+
+		for (int i = 0; i < values.Count; i++) {
+			
+			if (ptr == null)
+				return false;
+			
+			if (ptr.nodeValue != values.ElementAt (i))
+				return false;
+		}
+
+		return true;
+	}
 }
 
 
@@ -107,11 +122,6 @@ public class GameBoard : MonoBehaviour {
 
 
         nodes.first.nextStack.Push((GameNode)nodes.first.next);
-		/*
-        nodes.first.actionID = 1;
-        actionCount = 1;
-        */
-
 
     }
 
@@ -145,6 +155,8 @@ public class GameBoard : MonoBehaviour {
 
         return true;
     }
+
+
 
     // Update is called once per frame
     void Update()
@@ -233,9 +245,8 @@ public class GameBoard : MonoBehaviour {
         var nodeText = board[x, z].GetComponentInChildren<Text>() as Text;
 
 		board [x, z].GetComponent<GameNode> ().popupText = popupText;
-
+		board [x, z].GetComponent<GameNode> ().nodeValue = val;
         nodeText.text = val.ToString();
-
         board[x, z].SetActive(false);
 
         return board[x, z];
@@ -381,11 +392,4 @@ public class GameBoard : MonoBehaviour {
             //actionCount--;
         }
     }
-
-    /*
-	public void copyState(){
-		previousState = Instantiate (gameObject);
-        previousState.SetActive(false);
-        previousState.name = gameObject.name;
-    }*/
 }
