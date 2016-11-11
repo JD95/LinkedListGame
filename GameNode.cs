@@ -10,17 +10,20 @@ public class GameNode : MonoBehaviour {
     public GameObject newElementLight;
     public AudioSource newElementSound;
 
-    public float lineWidth = 0.2f;
+    public float lineWidth = 0.01f;
 	//private float distance = 45.9f;
 	public AddPopupText popupText;
     public Stack nextStack;
 	public Stack oldID;
     public int actionID;
+    public Transform particle;
 
-	void Start () {
+
+    void Start () {
         nextStack = new Stack();
 		oldID = new Stack ();
-	}
+        particle = transform.Find("Particle System");
+    }
 	
 	void Update () {
         //Debug.Log("ping");
@@ -29,6 +32,7 @@ public class GameNode : MonoBehaviour {
         if (GameBoard.drawCube == value.GetComponent<GameNode>())
         {
 			GetComponent<LineRenderer> ().enabled = true;
+            particle.gameObject.SetActive(true);
             //Debug.Log("Drawing connection line!");
             RaycastHit hit;
 
@@ -42,12 +46,14 @@ public class GameNode : MonoBehaviour {
 		else if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
 
 			GetComponent<LineRenderer> ().enabled = true;
-			drawArrow (next.value.gameObject.transform.position);
+            particle.gameObject.SetActive(true);
+            drawArrow (next.value.gameObject.transform.position);
 			Debug.Log (next.value.transform.gameObject.name);
 		} else {
 			// make
 			GetComponent<LineRenderer> ().enabled = false;
-		}
+            particle.gameObject.SetActive(false);
+        }
 
 
     }
@@ -68,7 +74,7 @@ public class GameNode : MonoBehaviour {
         GameBoard.lineDrawing(this);
     }
 
-    /********************
+/********************
  * The arrow functions as follows:
  * If the node is not pointing at another node and if the player selected this node, then have the arrow follow the mouse.
  * If the node is pointing at another node, then the line stays on that object.
@@ -76,10 +82,12 @@ public class GameNode : MonoBehaviour {
     void drawArrow(Vector3 target)
     {
         LineRenderer lr = value.GetComponent<LineRenderer>();
-        lr.SetWidth(lineWidth, lineWidth);
+        Vector3 dir = target - transform.position;
+        lr.SetWidth(0.5f, lineWidth);
         lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
         lr.SetPosition(0, value.transform.position);
         lr.SetPosition(1, target);
+        particle.rotation = Quaternion.LookRotation(dir);
     }
 
 
