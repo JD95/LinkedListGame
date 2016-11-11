@@ -1,29 +1,41 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 using System;
+using System.Linq;
+
+public class Stage {
+
+	public Func<bool> progressCheck;
+	public Action progress;
+	public string instruction;
+
+	public Stage (Func<bool> p, Action pg, string i){
+		this.progressCheck = p;
+		this.progress = pg;
+		this.instruction = i;
+	}
+}
 
 public class Level1Logic : WinCondition {
 
     public GameBoard board;
 
-    public GameObject firstNode;
+    public GameNode firstNode;
 
-    public GameObject[] groupOfNodes = new GameObject[3];
+	public GameNode[] groupOfNodes = new GameNode[3];
+
+	int stage = 0;
+	List<Stage> stages;
+
 
     public override bool canProgress()
     {
-        return board.emptyBoard();
+		return (stage >= stages.Count) ? false : stages[stage].progressCheck();
     }
 
     public override void progress()
     {
-        Debug.Log("Delete the rest of the nodes!");
-        firstNode.SetActive(false);
-        firstNode.GetComponent<GameNode>().deleteNode();
-        foreach (var node in groupOfNodes)
-        {
-            node.SetActive(true);
-        }
+		stages [stage++].progress ();
     }
 
     public override bool win()
@@ -40,20 +52,33 @@ public class Level1Logic : WinCondition {
     void Start () {
         Debug.Log("Please delete the node!");
 
-        board.board[0, 0] = firstNode;
-        board.board[0, 0].GetComponent<GameNode>().popupText = board.GetComponent<AddPopupText>();
+		firstNode = board.addNewNodeReturn ();
 
         for (int i = 0; i < 3; i++)
         {
-            board.board[0, i + 1] = groupOfNodes[i];
-            board.board[0, i + 1].GetComponent<GameNode>().popupText = board.GetComponent<AddPopupText>();
+			groupOfNodes [i] = board.addNewNodeReturn ();
         }
 
-        firstNode.SetActive(true);
+		firstNode.value.SetActive(true);
         foreach(var node in groupOfNodes)
         {
-            node.SetActive(false);
+			node.value.SetActive(false);
         }
+
+		stages = new List<Stage>(){
+			// Stage 1
+			new Stage(
+				() => !firstNode.isActiveAndEnabled,
+				() => { 
+					firstNode.deleteNode();
+					foreach (var node in groupOfNodes)
+						node.value.SetActive(true);
+				}, "Please delete the node"),
+			// Stage 2
+			new Stage(
+				() => groupOfNodes.Select(n => !n.value.activeSelf).Aggregate(true, (l,r) => l && r),
+				() => { Debug.Log("Winner!"); }, "Please delete all of the nodes")
+		};
 	}
 	
 	// Update is called once per frame

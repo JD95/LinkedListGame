@@ -278,20 +278,26 @@ public class GameBoard : MonoBehaviour {
         boardGen = true;
     }
 
+	public GameNode addNewNodeReturn(){
+		var node = createNewRandomNode().GetComponent<GameNode>();
+
+		node.value.SetActive(true);
+		node.newElementSound.Play();
+		nodes.last = node;
+		newElements.Add(node);
+
+		actionCount++;
+		node.actionID = actionCount;
+		//Debug.Log(nodes.last.actionID);
+		//popupText.makePopup("You created a new node!");
+		popupText.makePopup ("You created a new node!");
+
+		return node;
+	}
+
     public void addNewNode()
     {
-        var node = createNewRandomNode().GetComponent<GameNode>();
-
-        node.value.SetActive(true);
-        node.newElementSound.Play();
-        nodes.last = node;
-        newElements.Add(node);
-
-        actionCount++;
-        node.actionID = actionCount;
-        //Debug.Log(nodes.last.actionID);
-        //popupText.makePopup("You created a new node!");
-		popupText.makePopup ("You created a new node!");
+		addNewNodeReturn ();
     }
 
     private void moveToNull()
