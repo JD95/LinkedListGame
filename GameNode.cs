@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class GameNode : MonoBehaviour {
 
@@ -13,35 +14,34 @@ public class GameNode : MonoBehaviour {
     public AudioSource newElementSound;
 
     public float lineWidth = 0.01f;
-	//private float distance = 45.9f;
 	public AddPopupText popupText;
     public Stack nextStack;
 	public Stack oldID;
     public int actionID;
     public Transform particle;
+    private ParticleSystem particles;
 
 
     void Start () {
         nextStack = new Stack();
 		oldID = new Stack ();
         particle = transform.Find("Particle System");
+        particles = particle.gameObject.GetComponent<ParticleSystem>();
     }
 	
 	void Update () {
-        //Debug.Log("ping");
+
         if (value == null) return;
 
         if (GameBoard.drawCube == value.GetComponent<GameNode>())
         {
 			GetComponent<LineRenderer> ().enabled = true;
             particle.gameObject.SetActive(true);
-            //Debug.Log("Drawing connection line!");
+
             RaycastHit hit;
 
             // Get the point on the terrain where the mouse is
             Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 1000.0F);
-
-            //Debug.Log("Hit " + hit.transform.gameObject.name);
 
             drawArrow(hit.point);
         }
@@ -51,8 +51,8 @@ public class GameNode : MonoBehaviour {
             particle.gameObject.SetActive(true);
             drawArrow (next.value.gameObject.transform.position);
 			Debug.Log (next.value.transform.gameObject.name);
-		} else {
-			// make
+		}
+        else {
 			GetComponent<LineRenderer> ().enabled = false;
             particle.gameObject.SetActive(false);
         }
@@ -90,13 +90,14 @@ public class GameNode : MonoBehaviour {
         lr.SetPosition(0, value.transform.position);
         lr.SetPosition(1, target);
         particle.rotation = Quaternion.LookRotation(dir);
+
+        // Make particles go only to the edge of the line
+        particles.startLifetime = dir.magnitude / particles.startSpeed;
     }
 
 
     public void undo(ref int action)
     {
-        Debug.Log("My: " + actionID);
-        Debug.Log("Board: " + action);
 		if (actionID == action) // check if this is the current action to be undone.
 		{
 			if (nextStack.Count == 0)
@@ -118,9 +119,5 @@ public class GameNode : MonoBehaviour {
 			actionID = (int)oldID.Pop ();
 
 		}
-
-		//nextStack.Pop();
-		//next = (GameNode)nextStack.Peek(); //point to the previous node.
-
 	}
 }

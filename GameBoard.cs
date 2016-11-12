@@ -6,70 +6,6 @@ using System.Linq;
 
 using UnityEngine.UI;
 
-public class Tuple<X,Y>
-{
-	public X first;
-	public Y second;
-
-	public Tuple(X first, Y second)
-	{
-		this.first = first;
-		this.second = second;
-	}
-}
-
-
-public class GameLinkedList
-{
-    public GameNode first;
-    public GameNode last;
-
-    public GameNode find(GameObject cubeToFind, List<GameNode> otherNodes)
-    {
-        var searchNode = first;
-
-        while (searchNode != null && searchNode.value != cubeToFind)
-            searchNode = searchNode.next;
-
-        if(searchNode == null)
-            searchNode = otherNodes.Where(n => n.value == cubeToFind)
-                                   .FirstOrDefault();
-
-        return searchNode;
-    }
-
-    public int length()
-    {
-        int count = 0;
-        var searchNode = first;
-
-        while (searchNode != null)
-        {
-            searchNode = searchNode.next;
-            count++;
-        }
-
-        return count;
-    }
-
-	public bool listIs(List<int> values){
-		GameNode ptr = first;
-
-		for (int i = 0; i < values.Count; i++) {
-			
-			if (ptr == null)
-				return false;
-			
-			if (ptr.nodeValue != values.ElementAt (i))
-				return false;
-		}
-
-		return true;
-	}
-}
-
-
-
 public class LightColors{
 	public static Color green = new Color (0,1,0,1);
 	public static Color grey = new Color (0.5f, 0.5f, 0.5f, 1f);
@@ -79,30 +15,26 @@ public class LightColors{
 
 public class GameBoard : MonoBehaviour {
 
-    private const int numStartingNodes = 10;
-    public GameObject[] initial_board = new GameObject[10];
-	public GameObject[,] board = new GameObject[10, 10];
-    private System.Random rand = new System.Random();
-	//private CommandStack undoStack = new CommandStack();
-	private GameObject previousState;
-    public static bool boardGen = false;
-    public bool fillBoard = false;
 
     private static List<GameNode> newElements = new List<GameNode>();
+    private static GameLinkedList nodes = new GameLinkedList();
 
-    public GameObject nullCube;
-    public NodePointer nullPointer;
+    public static GameNode drawCube = null;
+    public static bool boardGen = false;
+    public static int actionCount;
+
+    private System.Random rand = new System.Random();
+    private const int numStartingNodes = 10;
+
+	public Board board = new Board();
     public NodePointer currentPointer;
     public NodePointer nextPointer;
     public NodePointer nextNextPointer;
-
+    public NodePointer nullPointer;
+    public GameObject nullCube;
 	public AddPopupText popupText;
-
-    public static int actionCount;
-    private static GameLinkedList nodes = new GameLinkedList();
-    public static GameNode drawCube = null;
-
     public WinCondition level;
+    public bool fillBoard = false;
 
     // Use this for initialization
     void Start()
@@ -119,46 +51,8 @@ public class GameBoard : MonoBehaviour {
         nextNextPointer.pointTo(currentPointer.node.next.next);
 
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
-
-
-        nodes.first.nextStack.Push((GameNode)nodes.first.next);
-
     }
 
-    bool leak(GameObject g)
-    {
-        return !(g == null || nodes.find(g, new List<GameNode>()));
-    }
-
-    public bool noLeaks()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                if (leak(board[i, j])) return false;
-            }
-        }
-
-        return true;
-    }
-
-    public bool emptyBoard()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            for (int j = 0; j < 10; j++)
-            {
-                if (board[i, j] != null) return false;
-            }
-        }
-
-        return true;
-    }
-
-
-
-    // Update is called once per frame
     void Update()
     {
         if (level.win())
@@ -238,18 +132,18 @@ public class GameBoard : MonoBehaviour {
     GameObject createNodeAt(int val, int x, int z)
 	{
 		// load the prefab "NodeCube" and create one on the board
-		board [x, z] = Instantiate(Resources.Load("NodeCube")) as GameObject;
-		board [x, z].transform.position = new Vector3 (x-5,0,z-5);
-        board[x, z].transform.parent = gameObject.transform;
+		board.spaces [x, z] = Instantiate(Resources.Load("NodeCube")) as GameObject;
+		board.spaces[x, z].transform.position = new Vector3 (x-5,0,z-5);
+        board.spaces[x, z].transform.parent = gameObject.transform;
 
-        var nodeText = board[x, z].GetComponentInChildren<Text>() as Text;
+        var nodeText = board.spaces[x, z].GetComponentInChildren<Text>() as Text;
 
-		board [x, z].GetComponent<GameNode> ().popupText = popupText;
-		board [x, z].GetComponent<GameNode> ().nodeValue = val;
+		board.spaces[x, z].GetComponent<GameNode> ().popupText = popupText;
+		board.spaces[x, z].GetComponent<GameNode> ().nodeValue = val;
         nodeText.text = val.ToString();
-        board[x, z].SetActive(false);
+        board.spaces[x, z].SetActive(false);
 
-        return board[x, z];
+        return board.spaces[x, z];
 	}
 
 	Tuple<int,int> genRandCoord(System.Random rand)
@@ -261,7 +155,7 @@ public class GameBoard : MonoBehaviour {
 	{
 		var newCoord = genRandCoord (rand);
 
-		while (board [newCoord.first, newCoord.second] != null) {
+		while (board.spaces[newCoord.first, newCoord.second] != null) {
 			newCoord = genRandCoord (rand);
 		}
 
@@ -285,7 +179,6 @@ public class GameBoard : MonoBehaviour {
             }
         }
 
-        //nodes.first.nextStack.Push((GameNode)nodes.first.next);
         boardGen = true;
     }
 
@@ -299,8 +192,6 @@ public class GameBoard : MonoBehaviour {
 
 		actionCount++;
 		node.actionID = actionCount;
-		//Debug.Log(nodes.last.actionID);
-		//popupText.makePopup("You created a new node!");
 		popupText.makePopup ("You created a new node!");
 
 		return node;
