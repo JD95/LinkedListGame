@@ -179,12 +179,15 @@ public class GameBoard : MonoBehaviour {
         var node = createNewRandomNode().GetComponent<GameNode>();
 
         node.value.SetActive(active);
-        node.newElementSound.Play();
 		newElements.Add(node);
 
 		actionCount++;
 		node.actionID = actionCount;
-		if (display_message) popupText.makePopup ("You created a new node!");
+        if (display_message)
+        {
+            popupText.makePopup("You created a new node!");
+            node.newElementSound.Play();
+        }
 
 		return node;
 	}
