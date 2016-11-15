@@ -34,6 +34,7 @@ public class GameBoard : MonoBehaviour {
     public GameObject nullCube;
 	public AddPopupText popupText;
     public WinCondition level;
+    public AudioSource invalidSound;
     public bool fillBoard = false;
 
     // Use this for initialization
@@ -60,11 +61,6 @@ public class GameBoard : MonoBehaviour {
         if (level.win())
         {
             Time.timeScale = 0;
-            //Debug.Log("You Win!");
-        }
-        else if (level.canProgress())
-        {
-            level.progress();
         }
 
         adjustLighting();
@@ -298,5 +294,17 @@ public class GameBoard : MonoBehaviour {
     public void printList()
     {
         Debug.Log(nodes.ToString());
+    }
+
+    public void progress()
+    {
+        if (level.canProgress())
+        {
+            level.progress();
+        }
+        else
+        {
+            invalidSound.Play();
+        }
     }
 }
