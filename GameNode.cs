@@ -6,8 +6,8 @@ public class GameNode : MonoBehaviour {
 
     public GameObject value;
     public GameNode next;
-    
 	public string nodeValue;
+    public bool deleted = false;
 
     public GameObject deleteButton;
     public GameObject newElementLight;
@@ -19,6 +19,7 @@ public class GameNode : MonoBehaviour {
 	public Stack oldID;
     public int actionID;
     public Transform particle;
+
     private ParticleSystem particles;
 
 
@@ -64,6 +65,7 @@ public class GameNode : MonoBehaviour {
         if (popupText == null) Debug.Log("Popup text is null!");
 		if (display_message) popupText.makePopup ("You deleted a node!");
 		value.SetActive (false);
+        deleted = true;
 	}
 
     public void setNodeButtonActive(bool b)
