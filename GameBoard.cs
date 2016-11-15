@@ -10,6 +10,7 @@ public class LightColors{
 	public static Color green = new Color (0,1,0,1);
 	public static Color grey = new Color (0.5f, 0.5f, 0.5f, 1f);
 	public static Color purple = new Color (1,0,1,1);
+    public static Color yellow = new Color(1, 0.5f, 0, 1);
 
 }
 
@@ -49,8 +50,10 @@ public class GameBoard : MonoBehaviour {
             currentPointer.pointToAndActivate(nodes.first);
 
             nextPointer.pointTo(currentPointer.node.next);
+            nextPointer.togglePointer();
 
             nextNextPointer.pointTo(currentPointer.node.next.next);
+            nextNextPointer.togglePointer();
         }
             
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
@@ -58,36 +61,31 @@ public class GameBoard : MonoBehaviour {
 
     void Update()
     {
-        if (level.win())
-        {
-            Time.timeScale = 0;
-        }
-
         adjustLighting();
     }
 
-    void adjustLighting() { 
+    void adjustLighting() {
 
-		if (nextPointer.isActive && nextPointer.node != null){
-			nextPointer.setNodeActive (true);
-			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.green;
-		}
+        adjustLight(currentPointer, LightColors.yellow);
 
-		if (nextPointer.node == null)
-		{
-			nextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
-		}
+        adjustLight(nextPointer, LightColors.green);
 
-		if (nextNextPointer.isActive && nextPointer.node != null) {
-			nextNextPointer.setNodeActive (true);
-			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.purple;
+        adjustLight(nextNextPointer, LightColors.purple);
 
-		}
+    }
 
-		if (nextNextPointer.node == null) {
-			nextNextPointer.spotlight.GetComponent<Light> ().color = LightColors.grey;
-		}
+    void adjustLight(NodePointer pointer, Color color)
+    {
+        if (pointer.isActive && pointer.node != null)
+        {
+            pointer.setNodeActive(true);
+            pointer.spotlight.GetComponent<Light>().color = color;
+        }
 
+        if (pointer.node == null)
+        {
+            pointer.spotlight.GetComponent<Light>().color = LightColors.grey;
+        }
     }
 
     public static void lineDrawing(GameNode selectedCube)
@@ -165,14 +163,11 @@ public class GameBoard : MonoBehaviour {
         {
             if (nodes.first == null)
             {
-                var newNode = createNewRandomNode();
-                nodes.first = newNode.GetComponent<GameNode>();
-                nodes.last = nodes.first;
+                nodes.first = addNewListNodeReturn(false, false);
             }
             else
             {
-                nodes.last.next = createNewRandomNode().GetComponent<GameNode>();
-                nodes.last = nodes.last.next;
+                addNewListNodeReturn(false, false);
             }
         }
 
@@ -198,7 +193,8 @@ public class GameBoard : MonoBehaviour {
     {
         var node = addNewNodeReturn(active, display_message);
 
-        nodes.last.next = node;
+        if(nodes.last != null)
+            nodes.last.next = node;
         nodes.last = node;
 
         return node;
@@ -242,7 +238,7 @@ public class GameBoard : MonoBehaviour {
             nextPointer.pointTo(currentPointer.node.next);
             nextPointer.togglePointer();
             nextPointer.sound.Play();
-			//popupText.makePopup ("You toggled next pointer!");
+			popupText.makePopup ("You toggled next pointer!");
         }
     }
 
@@ -257,7 +253,7 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.pointTo(currentPointer.node.next.next);
             nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
-			//popupText.makePopup ("You toggled next next pointer!");
+			popupText.makePopup ("You toggled next next pointer!");
         }
     }
 
@@ -301,6 +297,8 @@ public class GameBoard : MonoBehaviour {
         if (level.canProgress())
         {
             level.progress();
+
+            if (level.win()) Time.timeScale = 0;
         }
         else
         {

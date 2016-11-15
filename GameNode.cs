@@ -27,6 +27,7 @@ public class GameNode : MonoBehaviour {
 		oldID = new Stack ();
         particle = transform.Find("Particle System");
         particles = particle.gameObject.GetComponent<ParticleSystem>();
+        
     }
 	
 	void Update () {
