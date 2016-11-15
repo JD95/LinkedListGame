@@ -7,7 +7,7 @@ public class GameNode : MonoBehaviour {
     public GameObject value;
     public GameNode next;
     
-	public int nodeValue;
+	public string nodeValue;
 
     public GameObject deleteButton;
     public GameObject newElementLight;
@@ -50,7 +50,6 @@ public class GameNode : MonoBehaviour {
 			GetComponent<LineRenderer> ().enabled = true;
             particle.gameObject.SetActive(true);
             drawArrow (next.value.gameObject.transform.position);
-			Debug.Log (next.value.transform.gameObject.name);
 		}
         else {
 			GetComponent<LineRenderer> ().enabled = false;

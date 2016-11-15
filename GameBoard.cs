@@ -17,8 +17,8 @@ public class GameBoard : MonoBehaviour {
 
 
     private static List<GameNode> newElements = new List<GameNode>();
-    private static GameLinkedList nodes = new GameLinkedList();
 
+    public static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
     public static bool boardGen = false;
     public static int actionCount;
@@ -139,9 +139,8 @@ public class GameBoard : MonoBehaviour {
         var nodeText = board.spaces[x, z].GetComponentInChildren<Text>() as Text;
 
 		board.spaces[x, z].GetComponent<GameNode> ().popupText = popupText;
-		board.spaces[x, z].GetComponent<GameNode> ().nodeValue = val;
+		board.spaces[x, z].GetComponent<GameNode> ().nodeValue = val.ToString();
         nodeText.text = val.ToString();
-        board.spaces[x, z].SetActive(false);
 
         return board.spaces[x, z];
 	}
@@ -182,24 +181,34 @@ public class GameBoard : MonoBehaviour {
         boardGen = true;
     }
 
-	public GameNode addNewNodeReturn(){
-		var node = createNewRandomNode().GetComponent<GameNode>();
+	public GameNode addNewNodeReturn(bool active, bool display_message){
 
-		node.value.SetActive(true);
-		node.newElementSound.Play();
-		nodes.last = node;
+        var node = createNewRandomNode().GetComponent<GameNode>();
+
+        node.value.SetActive(active);
+        node.newElementSound.Play();
 		newElements.Add(node);
 
 		actionCount++;
 		node.actionID = actionCount;
-		popupText.makePopup ("You created a new node!");
+		if (display_message) popupText.makePopup ("You created a new node!");
 
 		return node;
 	}
 
+    public GameNode addNewListNodeReturn (bool active, bool display_message)
+    {
+        var node = addNewListNodeReturn(active, display_message);
+
+        nodes.last.next = node;
+        nodes.last = node;
+
+        return node;
+    }
+
     public void addNewNode()
     {
-		addNewNodeReturn ();
+		addNewNodeReturn (true, true);
     }
 
     private void moveToNull()
@@ -282,5 +291,10 @@ public class GameBoard : MonoBehaviour {
             current = current.next;
             //actionCount--;
         }
+    }
+
+    public void printList()
+    {
+        Debug.Log(nodes.ToString());
     }
 }

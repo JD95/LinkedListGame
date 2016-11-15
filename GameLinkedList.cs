@@ -38,20 +38,41 @@ public class GameLinkedList
         return count;
     }
 
-    public bool listIs(List<int> values)
+    public bool listIs(List<string> values)
     {
-        GameNode ptr = first;
+        GameNode node_ptr = first;
+
+        if (values.Count != length()) return false;
 
         for (int i = 0; i < values.Count; i++)
         {
-
-            if (ptr == null)
-                return false;
-
-            if (ptr.nodeValue != values.ElementAt(i))
-                return false;
+            if (values[i] != node_ptr.nodeValue) return false;
+            node_ptr = node_ptr.next;
         }
 
         return true;
     }
+
+    public override string ToString()
+    {
+        string message = "";
+        GameNode node_ptr = first;
+
+        if (node_ptr == null) return "[]";
+
+        message = "[";
+
+        while (node_ptr != null)
+        {
+            if (node_ptr.next == null)
+                message += node_ptr.nodeValue + "]";
+            else
+                message += node_ptr.nodeValue + ", ";
+
+            node_ptr = node_ptr.next;
+        }
+
+        return message;
+    }
+
 }
