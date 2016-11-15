@@ -21,13 +21,7 @@ public class Level2Logic : WinCondition {
 
 				firstgroup[0] = board.addNewNodeReturn (true, false);
                 firstgroup[1] = board.addNewNodeReturn (true, false);
-
-                for (int i = 0; i < 3; i++)
-					groupOfNodes [i] = board.addNewNodeReturn (false, false);
-
-                foreach(var node in groupOfNodes)
-					node.value.SetActive(false);
-
+					
                 GameBoard.nodes.first = firstgroup[0];
 
                 return "Please connect " + firstgroup[0].nodeValue + " to " + firstgroup[1].nodeValue;
@@ -38,10 +32,11 @@ public class Level2Logic : WinCondition {
 			new Stage(() => {
 
                 foreach(var node in firstgroup)
-                    node.deleteNode();
-          
-				foreach (var node in groupOfNodes)
-					node.value.SetActive(true);
+                    node.deleteNode(false);
+
+                for (int i = 0; i < 3; i++)
+                    groupOfNodes [i] = board.addNewNodeReturn (true, false);
+
 
                 GameBoard.nodes.first = groupOfNodes[0];
                 GameBoard.nodes.last = groupOfNodes[0];

@@ -33,7 +33,7 @@ public class Level1Logic : WinCondition {
 
 			// Stage 2
 			new Stage(() => { 
-				firstNode.deleteNode();
+				firstNode.deleteNode(false);
 				foreach (var node in groupOfNodes)
 					node.value.SetActive(true);
 

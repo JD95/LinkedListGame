@@ -42,14 +42,16 @@ public class GameBoard : MonoBehaviour {
         boardGen = !fillBoard;
 
         if (!boardGen)
+        {
             genNodes();
 
-        currentPointer.pointToAndActivate(nodes.first);
+            currentPointer.pointToAndActivate(nodes.first);
 
-        nextPointer.pointTo(currentPointer.node.next);
+            nextPointer.pointTo(currentPointer.node.next);
 
-        nextNextPointer.pointTo(currentPointer.node.next.next);
-
+            nextNextPointer.pointTo(currentPointer.node.next.next);
+        }
+            
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
     }
 
@@ -58,7 +60,7 @@ public class GameBoard : MonoBehaviour {
         if (level.win())
         {
             Time.timeScale = 0;
-            Debug.Log("You Win!");
+            //Debug.Log("You Win!");
         }
         else if (level.canProgress())
         {
@@ -198,7 +200,7 @@ public class GameBoard : MonoBehaviour {
 
     public GameNode addNewListNodeReturn (bool active, bool display_message)
     {
-        var node = addNewListNodeReturn(active, display_message);
+        var node = addNewNodeReturn(active, display_message);
 
         nodes.last.next = node;
         nodes.last = node;

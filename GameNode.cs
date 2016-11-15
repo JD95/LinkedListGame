@@ -59,9 +59,9 @@ public class GameNode : MonoBehaviour {
 
     }
 
-	public void deleteNode(){
+	public void deleteNode(bool display_message){
         if (popupText == null) Debug.Log("Popup text is null!");
-		popupText.makePopup ("You deleted a node!");
+		if (display_message) popupText.makePopup ("You deleted a node!");
 		value.SetActive (false);
 	}
 
