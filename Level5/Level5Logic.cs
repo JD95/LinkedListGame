@@ -68,7 +68,15 @@ public class Level5Logic : WinCondition
                     groupOfNodes[i].next = groupOfNodes[i + 1];
                 }
 
+				GameBoard.nodes.first = groupOfNodes[0];
+
                 board.currentPointer.pointTo(groupOfNodes[0]);
+
+				board.nextPointer.pointTo(firstgroup[1]);
+				board.nextPointer.togglePointer();
+
+				board.nextNextPointer.pointTo(firstgroup[2]);
+				board.nextNextPointer.togglePointer();
 
                 return "Toggle Next Next Pointer on " + groupOfNodes[4].nodeValue;
 
