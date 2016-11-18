@@ -2,6 +2,66 @@
 using System.Collections;
 using UnityEditor;
 
+public enum Action_Type
+{
+    POINT_AT,
+    DELETE,
+    TOGGLE,
+    NEWNODE,
+    NONE
+}
+
+public class Action
+{
+    public Action_Type type;
+    public GameNode oldNode;
+    public int oldID;
+
+    public Action()
+    {
+        oldNode = null;
+        oldID = 0;
+        type = Action_Type.NONE;
+    }
+    /*
+		Action objects are instantiated after every action made as called onto the gameBoard.
+		Every game node has a stack of Actions that will pass in the case of...
+		
+		Point at new Node:
+		act = new Action(POINT_AT, actionID, current.next);
+		
+		Deleting Node:
+		act = new Action(DELETE, actionID, null);
+		action_stack.push((Action) act)
+	*/
+    public Action(Action_Type t, int id, GameNode node)
+    {
+        type = t;
+        oldID = id;
+        oldNode = node;
+    }
+
+    /*Undo Methods:
+		All functions accept the current GameNode
+		Delete Node (GameNode n) -
+		Point Node (GameNode n)- 
+		Toggle Node (GameNode n) -
+	*/
+    public void undoDelete(GameNode n)
+    {
+        n.value.SetActive(true);
+    }
+    public void undoPoint(GameNode n)
+    {
+        //Debug.Log(oldNode.nodeValue);
+        n.next = oldNode;
+    }
+    public void undoToggle(GameNode n)
+    {
+
+    }
+}
+
 public class GameNode : MonoBehaviour {
 
     public GameObject value;
@@ -15,17 +75,14 @@ public class GameNode : MonoBehaviour {
 
     public float lineWidth = 0.01f;
 	public AddPopupText popupText;
-    public Stack nextStack;
-	public Stack oldID;
-    public int actionID;
     public Transform particle;
 
     private ParticleSystem particles;
-
+    public Stack actionStack;
 
     void Start () {
-        nextStack = new Stack();
-		oldID = new Stack ();
+        actionStack = new Stack();
+
         particle = transform.Find("Particle System");
         particles = particle.gameObject.GetComponent<ParticleSystem>();
         
@@ -64,7 +121,8 @@ public class GameNode : MonoBehaviour {
 	public void deleteNode(bool display_message){
         if (popupText == null) Debug.Log("Popup text is null!");
 		if (display_message) popupText.makePopup ("You deleted a node!");
-		value.SetActive (false);
+        Action temp = new Action(Action_Type.DELETE, GameBoard.actionCount++, null);
+		value.SetActive (false); 
         deleted = true;
 	}
 
@@ -98,28 +156,39 @@ public class GameNode : MonoBehaviour {
     }
 
 
-    public void undo(ref int action)
+    public void undo(ref int action, Backlog l)
     {
-		if (actionID == action) // check if this is the current action to be undone.
-		{
-			if (nextStack.Count == 0)
-			{ //Basically if you just recently created this object
+        if (actionStack.Count == 0)
+            return;
 
-				action--;
-				Destroy(gameObject);
-				return;
-			}
+        Action a = (Action) actionStack.Peek();
+        
+        if (a.oldID == action) // check if this is the current action to be undone.
+        {
+            Action_Type type = a.type;
 
-			nextStack.Pop();
-
-			if (nextStack.Count > 0)
-				next = (GameNode)nextStack.Peek(); //point to the previous node.
-			else
-				next = null;
-
-			action--;
-			actionID = (int)oldID.Pop ();
-
-		}
-	}
+            //if (type.Equals(Action_Type.POINT_AT))
+            //a.undoPoint(this);
+            
+            switch (type)
+            {
+                case Action_Type.POINT_AT:
+                    a.undoPoint(this);
+                    break;
+                case Action_Type.DELETE:
+                    a.undoDelete(this);
+                    break;
+                case Action_Type.TOGGLE:
+                    a.undoToggle(this);
+                    break;
+                default:
+                    break;
+            }
+            
+            actionStack.Pop();
+            l.log.RemoveAt(l.log.Count - 1);
+            l.outputLog(3);
+            action--;
+        }
+    }
 }

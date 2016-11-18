@@ -14,9 +14,35 @@ public class LightColors{
 
 }
 
+public class Backlog {
+    public List<string> log;
+    public Text ui;
+    public Backlog() {
+        log = new List<string>();
+    }
+
+    public void outputLog(int size) {
+        string[] output = log.ToArray();
+        int length = output.Length;
+        //Array.Reverse(output);
+        string outString = "";
+        ui.text = "";
+
+        for (int i = length-size; i < length; i++) {
+            if (i >= length)
+                break;
+ 
+            if (i == 0)
+                outString = "\n";
+
+            Debug.Log(output[i]);
+            outString = outString + "\n" + output[i];
+        }
+        ui.text = outString;
+    }
+}
+
 public class GameBoard : MonoBehaviour {
-
-
     public static List<GameNode> newElements = new List<GameNode>();
 
     public static GameLinkedList nodes = new GameLinkedList();
@@ -24,6 +50,7 @@ public class GameBoard : MonoBehaviour {
     public static bool boardGen = false;
     public static int actionCount;
 	public static bool inErrorState = false;
+    public static Backlog log = new Backlog();
 
     private System.Random rand = new System.Random();
     private const int numStartingNodes = 10;
@@ -39,12 +66,14 @@ public class GameBoard : MonoBehaviour {
     public AudioSource invalidSound;
     public bool fillBoard = false;
 	public ButtonBlink undoButtonBlink;
+    public Text blog;
 
     // Use this for initialization
     void Start()
     {
 		board.game = this;
         boardGen = !fillBoard;
+        log.ui = blog;
 
         if (!boardGen)
         {
@@ -119,18 +148,26 @@ public class GameBoard : MonoBehaviour {
         }
         else if (drawCube != selectedCube && drawCube != null)
         {
+            /*In the case that node points to a new node...*/
             var lineNode = nodes.find(drawCube.gameObject, newElements);
             var selectedNode = nodes.find(selectedCube.transform.gameObject, newElements);
 
             if (lineNode != null && selectedNode != null)
             {
                 Debug.Log("Nodes connected!");
-                lineNode.next = selectedNode;
 				newElements.Remove (selectedNode);
                 actionCount++;
+                /*
                 lineNode.nextStack.Push((GameNode) selectedNode);
 				lineNode.oldID.Push (lineNode.actionID);
                 lineNode.actionID = actionCount;
+                */
+                Action temp = new Action(Action_Type.POINT_AT, actionCount, lineNode.next);
+                lineNode.next = selectedNode;
+                lineNode.actionStack.Push((Action) temp);
+                log.log.Add(lineNode.nodeValue + " points to " + selectedNode.nodeValue);
+                //Debug.Log(actionCount);
+                log.outputLog(3);
             }
 
             drawCube = null;
@@ -195,7 +232,9 @@ public class GameBoard : MonoBehaviour {
 		newElements.Add(node);
 
 		actionCount++;
-		node.actionID = actionCount;
+        //node.actionID = actionCount;
+        //Action temp = new Action(Action_Type.NEWNODE, actionCount, null);
+
         if (display_message)
         {
             popupText.makePopup("You created a new node!");
@@ -275,33 +314,19 @@ public class GameBoard : MonoBehaviour {
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
-		if(inErrorState) inErrorState = false;
+		/*if(inErrorState) inErrorState = false;
 		undoButtonBlink.blink = false;
+        */
 
         if (actionCount == 0)
             return;
 
-		for (int i = newElements.Count - 1; i > 0; i--) {
-			if (newElements [i].actionID == actionCount) {
-				newElements [i].undo (ref actionCount);
-				break;
-			}
-		}
-
-
         GameNode current = nodes.first;
-        /*foreach (GameNode element in newElements)
-        {
-            element.undo(ref actionCount);
-            //newElements.Remove(element);
-        }
-		*/
 
         while (current != null) //goes through all of the nodes and undo them accordingly.
         {
-            current.undo(ref actionCount);
+            current.undo(ref actionCount, log);
             current = current.next;
-            //actionCount--;
         }
     }
 
