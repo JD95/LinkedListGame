@@ -17,12 +17,13 @@ public class LightColors{
 public class GameBoard : MonoBehaviour {
 
 
-    private static List<GameNode> newElements = new List<GameNode>();
+    public static List<GameNode> newElements = new List<GameNode>();
 
     public static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
     public static bool boardGen = false;
     public static int actionCount;
+	public static bool inErrorState = false;
 
     private System.Random rand = new System.Random();
     private const int numStartingNodes = 10;
@@ -37,10 +38,12 @@ public class GameBoard : MonoBehaviour {
     public WinCondition level;
     public AudioSource invalidSound;
     public bool fillBoard = false;
+	public ButtonBlink undoButtonBlink;
 
     // Use this for initialization
     void Start()
     {
+		board.game = this;
         boardGen = !fillBoard;
 
         if (!boardGen)
@@ -62,6 +65,15 @@ public class GameBoard : MonoBehaviour {
     void Update()
     {
         adjustLighting();
+
+		if (!inErrorState && !board.noLeaks (nodes, newElements)) { // check for memory leaks 
+			Debug.Log("Memory leaks detected.");
+			//Time.timeScale = 0;
+			popupText.makePopup ("A memory leak error detected. You can press Undo button to fix it or restart the level.");
+			inErrorState = true;
+			undoButtonBlink.blink = true;
+		}
+
     }
 
     void adjustLighting() {
@@ -114,6 +126,7 @@ public class GameBoard : MonoBehaviour {
             {
                 Debug.Log("Nodes connected!");
                 lineNode.next = selectedNode;
+				newElements.Remove (selectedNode);
                 actionCount++;
                 lineNode.nextStack.Push((GameNode) selectedNode);
 				lineNode.oldID.Push (lineNode.actionID);
@@ -262,6 +275,8 @@ public class GameBoard : MonoBehaviour {
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
+		if(inErrorState) inErrorState = false;
+		undoButtonBlink.blink = false;
 
         if (actionCount == 0)
             return;
