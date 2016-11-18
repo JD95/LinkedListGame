@@ -88,7 +88,7 @@ public class GameBoard : MonoBehaviour {
 
     void adjustLight(NodePointer pointer, Color color)
     {
-        if (pointer.isActive && pointer.node != null)
+        if (pointer.isActive && pointer.node != null && !pointer.node.deleted)
         {
             pointer.setNodeActive(true);
             pointer.spotlight.GetComponent<Light>().color = color;
