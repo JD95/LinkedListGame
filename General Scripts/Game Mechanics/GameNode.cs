@@ -66,35 +66,36 @@ public class GameNode : MonoBehaviour {
 
     public GameObject value;
     public GameNode next;
-	public string nodeValue;
+    public string nodeValue;
     public bool deleted = false;
 
     public GameObject deleteButton;
     public GameObject newElementLight;
     public AudioSource newElementSound;
+    public GameObject explosion_graphic;
 
     public float lineWidth = 0.01f;
-	public AddPopupText popupText;
+    public AddPopupText popupText;
     public Transform particle;
 
     private ParticleSystem particles;
     public Stack actionStack;
 
-    void Start () {
+    void Start() {
         actionStack = new Stack();
 
         particle = transform.Find("Particle System");
         particles = particle.gameObject.GetComponent<ParticleSystem>();
-        
+
     }
-	
-	void Update () {
+
+    void Update() {
 
         if (value == null) return;
 
         if (GameBoard.drawCube == value.GetComponent<GameNode>())
         {
-			GetComponent<LineRenderer> ().enabled = true;
+            GetComponent<LineRenderer>().enabled = true;
             particle.gameObject.SetActive(true);
 
             RaycastHit hit;
@@ -104,27 +105,27 @@ public class GameNode : MonoBehaviour {
 
             drawArrow(hit.point);
         }
-		else if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
+        else if (next != null && next.value != null && next.value.transform.gameObject.activeSelf) {
 
-			GetComponent<LineRenderer> ().enabled = true;
+            GetComponent<LineRenderer>().enabled = true;
             particle.gameObject.SetActive(true);
-            drawArrow (next.value.gameObject.transform.position);
-		}
+            drawArrow(next.value.gameObject.transform.position);
+        }
         else {
-			GetComponent<LineRenderer> ().enabled = false;
+            GetComponent<LineRenderer>().enabled = false;
             particle.gameObject.SetActive(false);
         }
 
 
     }
 
-	public void deleteNode(bool display_message){
-        if (popupText == null) Debug.Log("Popup text is null!");
-		if (display_message) popupText.makePopup ("You deleted a node!");
-        Action temp = new Action(Action_Type.DELETE, GameBoard.actionCount++, null);
-		value.SetActive (false); 
+    public void deleteNode(bool display_message) {
         deleted = true;
-	}
+        if (display_message) Instantiate(explosion_graphic, transform.position, transform.rotation);
+        if (display_message) popupText.makePopup("You deleted a node!");
+        Action temp = new Action(Action_Type.DELETE, GameBoard.actionCount++, null);
+        value.SetActive(false);
+    }
 
     public void setNodeButtonActive(bool b)
     {
