@@ -21,7 +21,7 @@ public class Dialogue : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         textbox.text = "";
-        voiceCues[line].Play();
+        if (voiceCues.Length > line) voiceCues[line].Play();
     }
 	
 	// Update is called once per frame
@@ -47,6 +47,6 @@ public class Dialogue : MonoBehaviour {
         line_counter = 0;
         type_counter = 0;
         textbox.text = "";
-        voiceCues[line].Play();
+        if (voiceCues.Length > line) voiceCues[line].Play();
     }
 }

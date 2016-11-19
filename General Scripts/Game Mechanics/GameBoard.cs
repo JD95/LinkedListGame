@@ -67,6 +67,7 @@ public class GameBoard : MonoBehaviour {
     public bool fillBoard = false;
 	public ButtonBlink undoButtonBlink;
     public Text blog;
+    public ProgressMessages progressMessages;
 
     // Use this for initialization
     void Start()
@@ -346,6 +347,7 @@ public class GameBoard : MonoBehaviour {
         else
         {
             invalidSound.Play();
+            progressMessages.playError();
         }
     }
 }
