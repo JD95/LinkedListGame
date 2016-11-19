@@ -66,6 +66,8 @@ public class NodePointer : MonoBehaviour
 
         otherNode.value.GetComponent<GameNode>().newElementLight.SetActive(false);
 
+		GameBoard.newElements.Remove (otherNode);
+
         node = otherNode;
 
         setNodeActive(true);
