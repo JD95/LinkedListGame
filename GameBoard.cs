@@ -35,7 +35,7 @@ public class Backlog {
             if (i == 0)
                 outString = "\n";
 
-            Debug.Log(output[i]);
+            //Debug.Log(output[i]);
             outString = outString + "\n" + output[i];
         }
         ui.text = outString;
