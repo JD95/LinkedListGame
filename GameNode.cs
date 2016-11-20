@@ -19,6 +19,7 @@ public class GameNode : MonoBehaviour {
 	public Stack oldID;
     public int actionID;
     public Transform particle;
+	public bool isNull = false;
 
     private ParticleSystem particles;
 

@@ -39,12 +39,14 @@ public class GameBoard : MonoBehaviour {
     public AudioSource invalidSound;
     public bool fillBoard = false;
 	public ButtonBlink undoButtonBlink;
+	public GameObject panel;
 
     // Use this for initialization
     void Start()
     {
 		board.game = this;
         boardGen = !fillBoard;
+
 
         if (!boardGen)
         {
@@ -60,7 +62,8 @@ public class GameBoard : MonoBehaviour {
         }
             
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
-    }
+		nullPointer.togglePointer ();
+	}
 
     void Update()
     {
@@ -68,10 +71,10 @@ public class GameBoard : MonoBehaviour {
 
 		if (!inErrorState && !board.noLeaks (nodes, newElements)) { // check for memory leaks 
 			Debug.Log("Memory leaks detected.");
-			//Time.timeScale = 0;
 			popupText.makePopup ("A memory leak error detected. You can press Undo button to fix it or restart the level.");
 			inErrorState = true;
 			undoButtonBlink.blink = true;
+			panel.SetActive (true);
 		}
 
     }
@@ -88,15 +91,16 @@ public class GameBoard : MonoBehaviour {
 
     void adjustLight(NodePointer pointer, Color color)
     {
-        if (pointer.isActive && pointer.node != null && !pointer.node.deleted)
+        if (pointer.isActive && pointer.node != null)
         {
             pointer.setNodeActive(true);
             pointer.spotlight.GetComponent<Light>().color = color;
         }
 
-        if (pointer.node == null)
+		if (pointer.node == null || pointer.node.deleted)
         {
             pointer.spotlight.GetComponent<Light>().color = LightColors.grey;
+			pointer.setNodeActive (false);
         }
     }
 
@@ -106,35 +110,33 @@ public class GameBoard : MonoBehaviour {
 
         if (selectedCube == null) return;
 
+		if (inErrorState) return;
+	
         //Debug.Log("Selected Something!");
-        if (drawCube == null)
-        {
-            Debug.Log("Drawing cube selected!");
-            drawCube = selectedCube.GetComponent<GameNode>();
-        }
-        else if (drawCube == selectedCube)
-        {
-            Debug.Log("Drawing Cube deselected!");
-            drawCube = null;
-        }
-        else if (drawCube != selectedCube && drawCube != null)
-        {
-            var lineNode = nodes.find(drawCube.gameObject, newElements);
-            var selectedNode = nodes.find(selectedCube.transform.gameObject, newElements);
+		if (drawCube == null && !selectedCube.isNull) {
+			Debug.Log ("Drawing cube selected!");
+			drawCube = selectedCube.GetComponent<GameNode> ();
+		} else if (drawCube == selectedCube) {
+			Debug.Log ("Drawing Cube deselected!");
+			drawCube = null;
+		} else if (drawCube != selectedCube && drawCube != null && selectedCube.next != drawCube) {
+			var lineNode = nodes.find (drawCube.gameObject, newElements);
+			var selectedNode = nodes.find (selectedCube.transform.gameObject, newElements);
 
-            if (lineNode != null && selectedNode != null)
-            {
-                Debug.Log("Nodes connected!");
-                lineNode.next = selectedNode;
+			if (lineNode != null && selectedNode != null) {
+				Debug.Log ("Nodes connected!");
+				lineNode.next = selectedNode;
 				newElements.Remove (selectedNode);
-                actionCount++;
-                lineNode.nextStack.Push((GameNode) selectedNode);
+				actionCount++;
+				lineNode.nextStack.Push ((GameNode)selectedNode);
 				lineNode.oldID.Push (lineNode.actionID);
-                lineNode.actionID = actionCount;
-            }
-
-            drawCube = null;
-        }
+				lineNode.actionID = actionCount;
+			}
+		
+			drawCube = null;
+		} else if (selectedCube.next == drawCube) {
+			drawCube.popupText.makePopup("You cannot connect two nodes to each other!");
+		}
 
     }
 
@@ -218,6 +220,8 @@ public class GameBoard : MonoBehaviour {
 
     public void addNewNode()
     {
+		if (inErrorState)
+			return;
 		addNewNodeReturn (true, true);
     }
 
@@ -225,11 +229,14 @@ public class GameBoard : MonoBehaviour {
     {
         currentPointer.togglePointer();
         nullPointer.toggleNode();
-		//popupText.makePopup ("Null - End of list!");
+		popupText.makePopup ("Null - End of list!");
     }
 
     public void moveCurrentPointer()
     {
+		if (inErrorState)
+			return;
+
         if (currentPointer.node.next == null)
         {
             moveToNull();
@@ -245,6 +252,9 @@ public class GameBoard : MonoBehaviour {
 
     public void toggleNextPointer()
     {
+		if (inErrorState)
+			return;
+		
         if(currentPointer.node.next == null)
         {
             nullPointer.togglePointer();
@@ -260,6 +270,9 @@ public class GameBoard : MonoBehaviour {
 
     public void toggleNextNextPointer()
     {
+		if (inErrorState)
+			return;
+		
         if(currentPointer.node.next == null || currentPointer.node.next.next == null)
         {
             nullPointer.togglePointer();
@@ -277,6 +290,7 @@ public class GameBoard : MonoBehaviour {
         //For the undo funcction to work, there must be an "action stack" 
 		if(inErrorState) inErrorState = false;
 		undoButtonBlink.blink = false;
+		panel.SetActive (false);
 
         if (actionCount == 0)
             return;

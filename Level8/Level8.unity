@@ -1688,6 +1688,7 @@ MonoBehaviour:
   level: {fileID: 1344865540}
   invalidSound: {fileID: 1344865542}
   fillBoard: 0
+  undoButtonBlink: {fileID: 0}
 --- !u!4 &1344865535
 Transform:
   m_ObjectHideFlags: 0
@@ -2011,13 +2012,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1344865533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1997e3b3ad32f542aa175989cce3aa7, type: 3}
+  m_Script: {fileID: 11500000, guid: d57e064d64de07f4495bc664e1ef83d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   instructions: {fileID: 834597739}
   board: {fileID: 1344865534}
   firstgroup:
-  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}

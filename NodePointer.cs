@@ -42,7 +42,7 @@ public class NodePointer : MonoBehaviour
     {
         if (node == null)
         {
-            nullPointer.toggleNode();
+            nullPointer.togglePointer();
             setNodeActive(false);
         }
         else
