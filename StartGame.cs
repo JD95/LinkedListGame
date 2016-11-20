@@ -17,7 +17,7 @@ public class StartGame : MonoBehaviour {
 
     public void startGame()
     {
-		SceneManager.LoadScene("Level1/Level1");
+		SceneManager.LoadScene("Cutscenes/Intro");
     }
 
 	public void startFreePlay()
