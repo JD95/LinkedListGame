@@ -115,7 +115,7 @@ public class GameBoard : MonoBehaviour {
 			popupText.makePopup ("A memory leak error detected. You can press Undo button to fix it or restart the level.");
 			inErrorState = true;
 			undoButtonBlink.blink = true;
-			panel.SetActive (true);
+			//panel.SetActive (true);
 		}
 
     }
@@ -167,19 +167,16 @@ public class GameBoard : MonoBehaviour {
         else if (drawCube != selectedCube && drawCube != null && selectedCube.next != drawCube)
         {
             /*In the case that node points to a new node...*/
-            var lineNode = nodes.find(drawCube.gameObject, newElements);
-            var selectedNode = nodes.find(selectedCube.transform.gameObject, newElements);
-
-            if (lineNode != null && selectedNode != null)
+            if (drawCube != null && selectedCube != null)
             {
                 Debug.Log("Nodes connected!");
-				newElements.Remove (selectedNode);
+				newElements.Remove (selectedCube);
                 actionCount++;
 
-                Action temp = new Action(Action_Type.POINT_AT, actionCount, lineNode.next);
-                lineNode.next = selectedNode;
-                lineNode.actionStack.Push((Action) temp);
-                log.log.Add(lineNode.nodeValue + " points to " + selectedNode.nodeValue);
+                Action temp = new Action(Action_Type.POINT_AT, actionCount, drawCube.next);
+                drawCube.next = selectedCube;
+                drawCube.actionStack.Push((Action) temp);
+                log.log.Add(drawCube.nodeValue + " points to " + selectedCube.nodeValue);
                 //Debug.Log(actionCount);
                 log.outputLog();
             }
@@ -298,12 +295,8 @@ public class GameBoard : MonoBehaviour {
         }
         else
         {
-<<<<<<< HEAD
-            actionCount++;
-            Action temp = new Action(Action_Type.MOVEPTR, actionCount, currentPointer);
-=======
             Action temp = new Action(Action_Type.MOVEPTR, ++actionCount, currentPointer);
->>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
+
             currentPointer.node.actionStack.Push((Action)temp);
 
             currentPointer.pointToAndActivate(currentPointer.node.next);

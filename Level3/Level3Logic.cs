@@ -50,6 +50,7 @@ public class Level3Logic : WinCondition {
                     groupOfNodes[i].next = groupOfNodes[i + 1];
 			    }
 
+                GameBoard.nodes.first = groupOfNodes[0];
                 board.currentPointer.pointTo(groupOfNodes[0]);
 
                 return "Move the current pointer to " + groupOfNodes[4].nodeValue;

@@ -34,11 +34,17 @@ public class Board
 
 	bool leak(GameObject g, GameLinkedList nodes, List<GameNode> newElements)
     {
-         return !(g == null 
+
+        bool test = !(g == null 
+             || g.GetComponent<GameNode>().deleted
+             || g.activeSelf
              || nodes.find(g, newElements) != null
              || game.currentPointer.node != null && game.currentPointer.node.value == g
              || game.nextPointer.node != null && game.nextPointer.node.value == g
              || game.nextNextPointer.node != null && game.nextNextPointer.node.value == g);
+
+        if (test) Debug.Log(g.GetComponent<GameNode>().nodeValue + " is a leak!");
+        return test;
              
     }
 

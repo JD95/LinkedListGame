@@ -33,7 +33,8 @@ public class Level2Logic : WinCondition {
 
                 foreach(var node in firstgroup) {
                     node.deleteNode(false);
-                    GameBoard.masterList.Remove(node);
+                    GameBoard.masterList.Remove(node); 
+                    GameObject.Destroy(node.value);
                 }
 
                 for (int i = 0; i < 3; i++)

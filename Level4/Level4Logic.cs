@@ -68,6 +68,7 @@ public class Level4Logic : WinCondition
                     groupOfNodes[i].next = groupOfNodes[i + 1];
                 }
 
+                GameBoard.nodes.first = groupOfNodes[0];
                 board.currentPointer.pointTo(groupOfNodes[0]);
 
                 return "Toggle Next Pointer on " + groupOfNodes[3].nodeValue;

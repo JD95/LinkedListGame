@@ -65,7 +65,7 @@ public class Level5Logic : WinCondition
                 GameBoard.log.wipeAll();
 
                 for (int i = 0; i < 5; i++)
-                    groupOfNodes[i] = board.addNewNodeReturn(true, false);
+                    groupOfNodes[i] = board.addNewNodeReturn(false, false);
 
                 for (int i = 0; i < 4; i++)
                 {
@@ -77,10 +77,10 @@ public class Level5Logic : WinCondition
                 board.currentPointer.pointTo(groupOfNodes[0]);
 
 				board.nextPointer.pointTo(groupOfNodes[1]);
-				//board.nextPointer.togglePointer();
+				board.nextPointer.togglePointer();
 
 				board.nextNextPointer.pointTo(groupOfNodes[2]);
-				//board.nextNextPointer.togglePointer();
+				board.nextNextPointer.togglePointer();
 
                 return "Toggle Next Next Pointer on " + groupOfNodes[4].nodeValue;
 

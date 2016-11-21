@@ -52,10 +52,8 @@ public class Action
         oldID = id;
         oldNode = null;
         nPtr = node;
-<<<<<<< HEAD
+
         nPtr.pointerMoves.Push(node.node);
-=======
->>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
     }
 
     /*Undo Methods:
@@ -80,15 +78,9 @@ public class Action
 
     }
 
-<<<<<<< HEAD
     public void undoMove()
     {
         nPtr.pointToAndActivate(nPtr.pointerMoves.Pop());
-=======
-    public void undoMove(NodePointer n)
-    {
-        n.pointToAndActivate(n.node);
->>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
     }
 }
 
@@ -152,19 +144,16 @@ public class GameNode : MonoBehaviour {
     }
 
 	public void deleteNode(bool display_message){
-        if (popupText == null) Debug.Log("Popup text is null!");
-		if (display_message) popupText.makePopup ("You deleted a node!");
+
+        if (display_message) Instantiate(explosion_graphic, transform.position, transform.rotation);
+        if (display_message) popupText.makePopup("You deleted " + nodeValue + "!");
 
         Action temp = new Action(Action_Type.DELETE, ++GameBoard.actionCount, this);
         actionStack.Push((Action) temp);
 
         GameBoard.log.log.Add("Deleted Node " + nodeValue);
         GameBoard.log.outputLog();
-		value.SetActive (false); 
         deleted = true;
-        if (display_message) Instantiate(explosion_graphic, transform.position, transform.rotation);
-        if (display_message) popupText.makePopup("You deleted a node!");
-        Action temp = new Action(Action_Type.DELETE, GameBoard.actionCount++, null);
         value.SetActive(false);
     }
 
@@ -200,6 +189,7 @@ public class GameNode : MonoBehaviour {
 
     public void undo(ref int action, Backlog l)
     {
+        Debug.Log("Ping");
         if (actionStack.Count == 0)
             return;
 
@@ -224,11 +214,8 @@ public class GameNode : MonoBehaviour {
                     a.undoToggle(this);
                     break;
                 case Action_Type.MOVEPTR:
-<<<<<<< HEAD
+
                     a.undoMove();
-=======
-                    a.undoMove(a.nPtr);
->>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
                     break;
                 default:
                     break;
