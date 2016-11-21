@@ -298,8 +298,12 @@ public class GameBoard : MonoBehaviour {
         }
         else
         {
+<<<<<<< HEAD
             actionCount++;
             Action temp = new Action(Action_Type.MOVEPTR, actionCount, currentPointer);
+=======
+            Action temp = new Action(Action_Type.MOVEPTR, ++actionCount, currentPointer);
+>>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
             currentPointer.node.actionStack.Push((Action)temp);
 
             currentPointer.pointToAndActivate(currentPointer.node.next);

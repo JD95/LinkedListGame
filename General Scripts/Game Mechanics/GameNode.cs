@@ -52,7 +52,10 @@ public class Action
         oldID = id;
         oldNode = null;
         nPtr = node;
+<<<<<<< HEAD
         nPtr.pointerMoves.Push(node.node);
+=======
+>>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
     }
 
     /*Undo Methods:
@@ -77,9 +80,15 @@ public class Action
 
     }
 
+<<<<<<< HEAD
     public void undoMove()
     {
         nPtr.pointToAndActivate(nPtr.pointerMoves.Pop());
+=======
+    public void undoMove(NodePointer n)
+    {
+        n.pointToAndActivate(n.node);
+>>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
     }
 }
 
@@ -210,7 +219,11 @@ public class GameNode : MonoBehaviour {
                     a.undoToggle(this);
                     break;
                 case Action_Type.MOVEPTR:
+<<<<<<< HEAD
                     a.undoMove();
+=======
+                    a.undoMove(a.nPtr);
+>>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
                     break;
                 default:
                     break;
