@@ -310,7 +310,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 884d2bf8778acb84d9bd64c037437412, type: 3}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -608,7 +608,6 @@ MonoBehaviour:
   deleteButton: {fileID: 1000013071719994}
   newElementLight: {fileID: 1000010532652784}
   newElementSound: {fileID: 82000010954571978}
-  node_delete_sound: {fileID: 82000011273852500}
   explosion_graphic: {fileID: 167558, guid: a11dc34cafe3dfd4facb59cfb4e72de8, type: 2}
   lineWidth: 0.01
   popupText: {fileID: 0}

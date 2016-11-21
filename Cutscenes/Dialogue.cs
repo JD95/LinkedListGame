@@ -18,6 +18,8 @@ public class Dialogue : MonoBehaviour {
     private float line_counter = 0;
     private int string_index = 0;
 
+    public GameObject button;
+
 	// Use this for initialization
 	void Start () {
         textbox.text = "";
@@ -26,6 +28,7 @@ public class Dialogue : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        //Debug.Log("Ping");
         type_counter += Time.deltaTime * 10;
         line_counter += Time.deltaTime;
 
@@ -48,5 +51,10 @@ public class Dialogue : MonoBehaviour {
         type_counter = 0;
         textbox.text = "";
         if (voiceCues.Length > line) voiceCues[line].Play();
+        if (line + 1 == dialogue.Length)
+        {
+            button.SetActive(true);
+            button.GetComponent<ButtonFadeIn>().activate();
+        }
     }
 }

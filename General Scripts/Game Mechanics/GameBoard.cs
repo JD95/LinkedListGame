@@ -279,7 +279,7 @@ public class GameBoard : MonoBehaviour {
         {
             currentPointer.pointToAndActivate(currentPointer.node.next);
             currentPointer.sound.Play();
-			//popupText.makePopup ("You advanced current pointer by one!");
+			popupText.makePopup ("You advanced current pointer by one!");
         }
     }
 
@@ -342,7 +342,7 @@ public class GameBoard : MonoBehaviour {
         {
             level.progress();
 
-            if (level.win()) Time.timeScale = 0;
+            //if (level.win()) Time.timeScale = 0;
         }
         else
         {

@@ -626,6 +626,11 @@ Prefab:
       propertyPath: node
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
   m_IsPrefabParent: 0
@@ -1127,6 +1132,11 @@ Prefab:
       propertyPath: spreadCustomCurve.m_RotationOrder
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
   m_IsPrefabParent: 0
@@ -1277,6 +1287,11 @@ Prefab:
     - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
         type: 2}
       propertyPath: spreadCustomCurve.m_RotationOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: m_PlayOnAwake
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1912,6 +1927,16 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 82000010065340308, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 8300000, guid: d84bc29ad84cc0641b86ff38f1204a0d, type: 3}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
   m_IsPrefabParent: 0
