@@ -53,8 +53,12 @@ public class Level4Logic : WinCondition
             //Stage 3
             new Stage(() => {
 
-                foreach (var node in firstgroup)
+                foreach (var node in firstgroup) {
                     node.deleteNode(false);
+                    GameBoard.newElements.Remove(node);
+                }
+
+                GameBoard.log.wipeAll();
 
                 for (int i = 0; i < 4; i++)
                     groupOfNodes[i] = board.addNewNodeReturn(true, false);

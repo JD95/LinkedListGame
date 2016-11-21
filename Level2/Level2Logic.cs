@@ -31,8 +31,10 @@ public class Level2Logic : WinCondition {
 			// Stage 2
 			new Stage(() => {
 
-                foreach(var node in firstgroup)
+                foreach(var node in firstgroup) {
                     node.deleteNode(false);
+                    GameBoard.masterList.Remove(node);
+                }
 
                 for (int i = 0; i < 3; i++)
                     groupOfNodes [i] = board.addNewNodeReturn (true, false);

@@ -8,6 +8,7 @@ public enum Action_Type
     DELETE,
     TOGGLE,
     NEWNODE,
+    MOVEPTR,
     NONE
 }
 
@@ -16,11 +17,13 @@ public class Action
     public Action_Type type;
     public GameNode oldNode;
     public int oldID;
+    public NodePointer nPtr;
 
     public Action()
     {
         oldNode = null;
         oldID = 0;
+        nPtr = null;
         type = Action_Type.NONE;
     }
     /*
@@ -39,6 +42,15 @@ public class Action
         type = t;
         oldID = id;
         oldNode = node;
+        nPtr = null;
+    }
+
+    public Action(Action_Type t, int id, NodePointer node)
+    {
+        type = t;
+        oldID = id;
+        oldNode = null;
+        nPtr = node;
     }
 
     /*Undo Methods:
@@ -50,15 +62,22 @@ public class Action
     public void undoDelete(GameNode n)
     {
         n.value.SetActive(true);
+        n.deleted = false;
     }
     public void undoPoint(GameNode n)
     {
-        //Debug.Log(oldNode.nodeValue);
+        GameBoard.newElements.Add(n.next);
         n.next = oldNode;
     }
+
     public void undoToggle(GameNode n)
     {
 
+    }
+
+    public void undoMove(NodePointer n)
+    {
+        n.pointToAndActivate(n.node);
     }
 }
 
@@ -122,7 +141,12 @@ public class GameNode : MonoBehaviour {
 	public void deleteNode(bool display_message){
         if (popupText == null) Debug.Log("Popup text is null!");
 		if (display_message) popupText.makePopup ("You deleted a node!");
-        Action temp = new Action(Action_Type.DELETE, GameBoard.actionCount++, null);
+
+        Action temp = new Action(Action_Type.DELETE, ++GameBoard.actionCount, this);
+        actionStack.Push((Action) temp);
+
+        GameBoard.log.log.Add("Deleted Node " + nodeValue);
+        GameBoard.log.outputLog();
 		value.SetActive (false); 
         deleted = true;
 	}
@@ -182,13 +206,16 @@ public class GameNode : MonoBehaviour {
                 case Action_Type.TOGGLE:
                     a.undoToggle(this);
                     break;
+                case Action_Type.MOVEPTR:
+                    a.undoMove(a.nPtr);
+                    break;
                 default:
                     break;
             }
             
             actionStack.Pop();
             l.log.RemoveAt(l.log.Count - 1);
-            l.outputLog(3);
+            l.outputLog();
             action--;
         }
     }
