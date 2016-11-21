@@ -17,18 +17,22 @@ public class LightColors{
 public class Backlog {
     public List<string> log;
     public Text ui;
+    public int size = 3;
     public Backlog() {
         log = new List<string>();
     }
 
-    public void outputLog(int size) {
+    public void outputLog() {
         string[] output = log.ToArray();
         int length = output.Length;
         //Array.Reverse(output);
         string outString = "";
+        int start = length - size;
         ui.text = "";
+        if (start < 0)
+            start = 0;
 
-        for (int i = length-size; i < length; i++) {
+        for (int i = start; i < length; i++) {
             if (i >= length)
                 break;
  
@@ -40,10 +44,17 @@ public class Backlog {
         }
         ui.text = outString;
     }
+
+    public void wipeAll()
+    {
+        log.Clear();
+        outputLog();
+    }
 }
 
 public class GameBoard : MonoBehaviour {
     public static List<GameNode> newElements = new List<GameNode>();
+    public static List<GameNode> masterList = new List<GameNode>();
 
     public static GameLinkedList nodes = new GameLinkedList();
     public static GameNode drawCube = null;
@@ -61,6 +72,7 @@ public class GameBoard : MonoBehaviour {
     public NodePointer nextNextPointer;
     public NodePointer nullPointer;
     public GameObject nullCube;
+    public GameObject panel;
 	public AddPopupText popupText;
     public WinCondition level;
     public AudioSource invalidSound;
@@ -76,6 +88,7 @@ public class GameBoard : MonoBehaviour {
         boardGen = !fillBoard;
         log.ui = blog;
 
+
         if (!boardGen)
         {
             genNodes();
@@ -90,7 +103,8 @@ public class GameBoard : MonoBehaviour {
         }
             
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
-    }
+		nullPointer.togglePointer ();
+	}
 
     void Update()
     {
@@ -98,10 +112,10 @@ public class GameBoard : MonoBehaviour {
 
 		if (!inErrorState && !board.noLeaks (nodes, newElements)) { // check for memory leaks 
 			Debug.Log("Memory leaks detected.");
-			//Time.timeScale = 0;
 			popupText.makePopup ("A memory leak error detected. You can press Undo button to fix it or restart the level.");
 			inErrorState = true;
 			undoButtonBlink.blink = true;
+			panel.SetActive (true);
 		}
 
     }
@@ -118,15 +132,16 @@ public class GameBoard : MonoBehaviour {
 
     void adjustLight(NodePointer pointer, Color color)
     {
-        if (pointer.isActive && pointer.node != null && !pointer.node.deleted)
+        if (pointer.isActive && pointer.node != null)
         {
             pointer.setNodeActive(true);
             pointer.spotlight.GetComponent<Light>().color = color;
         }
 
-        if (pointer.node == null)
+		if (pointer.node == null || pointer.node.deleted)
         {
             pointer.spotlight.GetComponent<Light>().color = LightColors.grey;
+			pointer.setNodeActive (false);
         }
     }
 
@@ -136,8 +151,10 @@ public class GameBoard : MonoBehaviour {
 
         if (selectedCube == null) return;
 
+		if (inErrorState) return;
+
         //Debug.Log("Selected Something!");
-        if (drawCube == null)
+        if (drawCube == null && !selectedCube.isNull)
         {
             Debug.Log("Drawing cube selected!");
             drawCube = selectedCube.GetComponent<GameNode>();
@@ -147,7 +164,7 @@ public class GameBoard : MonoBehaviour {
             Debug.Log("Drawing Cube deselected!");
             drawCube = null;
         }
-        else if (drawCube != selectedCube && drawCube != null)
+        else if (drawCube != selectedCube && drawCube != null && selectedCube.next != drawCube)
         {
             /*In the case that node points to a new node...*/
             var lineNode = nodes.find(drawCube.gameObject, newElements);
@@ -158,20 +175,20 @@ public class GameBoard : MonoBehaviour {
                 Debug.Log("Nodes connected!");
 				newElements.Remove (selectedNode);
                 actionCount++;
-                /*
-                lineNode.nextStack.Push((GameNode) selectedNode);
-				lineNode.oldID.Push (lineNode.actionID);
-                lineNode.actionID = actionCount;
-                */
+
                 Action temp = new Action(Action_Type.POINT_AT, actionCount, lineNode.next);
                 lineNode.next = selectedNode;
                 lineNode.actionStack.Push((Action) temp);
                 log.log.Add(lineNode.nodeValue + " points to " + selectedNode.nodeValue);
                 //Debug.Log(actionCount);
-                log.outputLog(3);
+                log.outputLog();
             }
 
             drawCube = null;
+        }
+        else if (selectedCube.next == drawCube)
+        {
+            drawCube.popupText.makePopup("You cannot connect two nodes to each other!");
         }
 
     }
@@ -229,12 +246,11 @@ public class GameBoard : MonoBehaviour {
 
         var node = createNewRandomNode().GetComponent<GameNode>();
 
+        //GO HERE ADD TO MASTER NODE LIST
+        masterList.Add(node);
+
         node.value.SetActive(active);
 		newElements.Add(node);
-
-		actionCount++;
-        //node.actionID = actionCount;
-        //Action temp = new Action(Action_Type.NEWNODE, actionCount, null);
 
         if (display_message)
         {
@@ -258,6 +274,8 @@ public class GameBoard : MonoBehaviour {
 
     public void addNewNode()
     {
+		if (inErrorState)
+			return;
 		addNewNodeReturn (true, true);
     }
 
@@ -265,11 +283,14 @@ public class GameBoard : MonoBehaviour {
     {
         currentPointer.togglePointer();
         nullPointer.toggleNode();
-		//popupText.makePopup ("Null - End of list!");
+		popupText.makePopup ("Null - End of list!");
     }
 
     public void moveCurrentPointer()
     {
+		if (inErrorState)
+			return;
+
         if (currentPointer.node.next == null)
         {
             moveToNull();
@@ -277,14 +298,27 @@ public class GameBoard : MonoBehaviour {
         }
         else
         {
+<<<<<<< HEAD
+            actionCount++;
+            Action temp = new Action(Action_Type.MOVEPTR, actionCount, currentPointer);
+=======
+            Action temp = new Action(Action_Type.MOVEPTR, ++actionCount, currentPointer);
+>>>>>>> 0128676e362b3e4fc9680effd4091ab1804d655b
+            currentPointer.node.actionStack.Push((Action)temp);
+
             currentPointer.pointToAndActivate(currentPointer.node.next);
             currentPointer.sound.Play();
-			popupText.makePopup ("You advanced current pointer by one!");
+            //popupText.makePopup ("You advanced current pointer by one!");
+            log.log.Add("Current Pointer is now " + currentPointer.node.nodeValue);
+            log.outputLog();
         }
     }
 
     public void toggleNextPointer()
     {
+		if (inErrorState)
+			return;
+		
         if(currentPointer.node.next == null)
         {
             nullPointer.togglePointer();
@@ -295,11 +329,16 @@ public class GameBoard : MonoBehaviour {
             nextPointer.togglePointer();
             nextPointer.sound.Play();
 			popupText.makePopup ("You toggled next pointer!");
+            log.log.Add("Next pointer, "+ nextPointer.node.nodeValue + ", toggled");
+            log.outputLog();
         }
     }
 
     public void toggleNextNextPointer()
     {
+		if (inErrorState)
+			return;
+		
         if(currentPointer.node.next == null || currentPointer.node.next.next == null)
         {
             nullPointer.togglePointer();
@@ -315,19 +354,16 @@ public class GameBoard : MonoBehaviour {
 
 	public void undoAction(){
         //For the undo funcction to work, there must be an "action stack" 
-		/*if(inErrorState) inErrorState = false;
+		if(inErrorState) inErrorState = false;
 		undoButtonBlink.blink = false;
-        */
+        
 
         if (actionCount == 0)
             return;
 
-        GameNode current = nodes.first;
-
-        while (current != null) //goes through all of the nodes and undo them accordingly.
+        foreach(GameNode current in masterList)
         {
             current.undo(ref actionCount, log);
-            current = current.next;
         }
     }
 

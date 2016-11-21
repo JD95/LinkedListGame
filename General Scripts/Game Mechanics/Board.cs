@@ -34,11 +34,12 @@ public class Board
 
 	bool leak(GameObject g, GameLinkedList nodes, List<GameNode> newElements)
     {
-        return !(g == null 
-			|| nodes.find(g, newElements) != null
-			|| game.currentPointer.node.value == g
-			|| game.nextPointer.node.value == g
-			|| game.nextNextPointer.node.value == g);
+         return !(g == null 
+             || nodes.find(g, newElements) != null
+             || game.currentPointer.node != null && game.currentPointer.node.value == g
+             || game.nextPointer.node != null && game.nextPointer.node.value == g
+             || game.nextNextPointer.node != null && game.nextNextPointer.node.value == g);
+             
     }
 
 	public bool noLeaks(GameLinkedList nodes, List<GameNode> newElements)

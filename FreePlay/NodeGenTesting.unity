@@ -155,7 +155,7 @@ Prefab:
       objectReference: {fileID: 1943519676}
     - target: {fileID: 1000010428551678, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1000013592372490, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
       propertyPath: m_IsActive
@@ -569,7 +569,8 @@ MonoBehaviour:
   level: {fileID: 0}
   invalidSound: {fileID: 0}
   fillBoard: 1
-  undoButton: {fileID: 1518634522}
+  undoButtonBlink: {fileID: 1518634527}
+  panel: {fileID: 2085485474}
 --- !u!4 &615125220
 Transform:
   m_ObjectHideFlags: 0
@@ -2069,10 +2070,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   button: {fileID: 1518634524}
-  normalColor: {r: 1, g: 1, b: 1, a: 0}
-  blinkColor: {r: 1, g: 1, b: 1, a: 0}
-  blink: 1
-  period: 5
+  normalColor: {r: 1, g: 1, b: 1, a: 1}
+  blinkColor: {r: 1, g: 1, b: 1, a: 1}
+  blink: 0
+  period: 4
 --- !u!1 &1561720033
 GameObject:
   m_ObjectHideFlags: 0
@@ -2228,6 +2229,20 @@ Prefab:
     - target: {fileID: 1000010814658812, guid: 94a9999cfd498d84f94d9ec950b8a3f9, type: 2}
       propertyPath: m_Name
       value: NullCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010637336472, guid: 94a9999cfd498d84f94d9ec950b8a3f9,
+        type: 2}
+      propertyPath: isNull
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 120000013521398906, guid: 94a9999cfd498d84f94d9ec950b8a3f9,
+        type: 2}
+      propertyPath: m_MotionVectors
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010814658812, guid: 94a9999cfd498d84f94d9ec950b8a3f9, type: 2}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 94a9999cfd498d84f94d9ec950b8a3f9, type: 2}
@@ -2874,8 +2889,8 @@ RectTransform:
   m_RootOrder: 7
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.0000076294, y: -81.661}
-  m_SizeDelta: {x: -425, y: -520}
+  m_AnchoredPosition: {x: -0.0000076294, y: -5.0387726}
+  m_SizeDelta: {x: -425, y: -366.76}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2085485476
 MonoBehaviour:
