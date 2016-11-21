@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System.Collections.Generic;
 
 public class NodePointer : MonoBehaviour
 {
@@ -9,8 +9,14 @@ public class NodePointer : MonoBehaviour
     public AudioSource sound;
     public bool isCurrentPointer = false;
     public bool isActive = false;
+    public Stack<GameNode> pointerMoves = new Stack<GameNode>();
 
     private float distance = 45.9f;
+
+    public void Start()
+    {
+
+    }
 
     public void Update()
     { }

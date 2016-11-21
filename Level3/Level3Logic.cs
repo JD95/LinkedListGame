@@ -35,8 +35,12 @@ public class Level3Logic : WinCondition {
             // Stage 2
             new Stage(() => {
 
-                foreach (var node in firstgroup)
+                foreach (var node in firstgroup) {
+                    GameBoard.masterList.Remove(node);
                     node.deleteNode(false);
+                }
+
+                GameBoard.log.wipeAll();
 
                 for (int i = 0; i < 5; i++)
                     groupOfNodes[i] = board.addNewNodeReturn(true, false);
@@ -57,6 +61,8 @@ public class Level3Logic : WinCondition {
 
                 foreach (var node in groupOfNodes)
                     node.deleteNode(false);
+
+                GameBoard.log.wipeAll();
 
                 for (int i = 0; i < 5; i++)
                     groupOfNodes[i] = board.addNewNodeReturn(true, false);

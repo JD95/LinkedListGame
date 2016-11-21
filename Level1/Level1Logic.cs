@@ -32,8 +32,12 @@ public class Level1Logic : WinCondition {
             }, () => !firstNode.isActiveAndEnabled),
 
 			// Stage 2
-			new Stage(() => { 
+			new Stage(() => {
+                GameBoard.masterList.Remove(firstNode);
 				firstNode.deleteNode(false);
+
+                GameBoard.log.wipeAll();
+
 				foreach (var node in groupOfNodes)
 					node.value.SetActive(true);
 

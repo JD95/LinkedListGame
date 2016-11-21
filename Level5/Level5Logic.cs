@@ -57,8 +57,12 @@ public class Level5Logic : WinCondition
             //Stage 4
             new Stage(() => {
 
-                foreach (var node in firstgroup)
+                foreach (var node in firstgroup) {
                     node.deleteNode(false);
+                    GameBoard.masterList.Remove(node);
+                }
+
+                GameBoard.log.wipeAll();
 
                 for (int i = 0; i < 5; i++)
                     groupOfNodes[i] = board.addNewNodeReturn(true, false);
@@ -72,11 +76,11 @@ public class Level5Logic : WinCondition
 
                 board.currentPointer.pointTo(groupOfNodes[0]);
 
-				board.nextPointer.pointTo(firstgroup[1]);
-				board.nextPointer.togglePointer();
+				board.nextPointer.pointTo(groupOfNodes[1]);
+				//board.nextPointer.togglePointer();
 
-				board.nextNextPointer.pointTo(firstgroup[2]);
-				board.nextNextPointer.togglePointer();
+				board.nextNextPointer.pointTo(groupOfNodes[2]);
+				//board.nextNextPointer.togglePointer();
 
                 return "Toggle Next Next Pointer on " + groupOfNodes[4].nodeValue;
 
