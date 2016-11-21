@@ -32,13 +32,13 @@ public class Board
         return true;
     }
 
-	bool leak(GameObject g, GameLinkedList nodes, List<GameNode> newElements)
+	bool leak(GameObject g, GameLinkedList nodes)
     {
 
         bool test = !(g == null 
              || g.GetComponent<GameNode>().deleted
              || g.activeSelf
-             || nodes.find(g, newElements) != null
+             || !g.activeSelf && nodes.find(g, new List<GameNode>()) != null
              || game.currentPointer.node != null && game.currentPointer.node.value == g
              || game.nextPointer.node != null && game.nextPointer.node.value == g
              || game.nextNextPointer.node != null && game.nextNextPointer.node.value == g);
@@ -48,13 +48,13 @@ public class Board
              
     }
 
-	public bool noLeaks(GameLinkedList nodes, List<GameNode> newElements)
+	public bool noLeaks(GameLinkedList nodes)
     {
         for (int i = 0; i < 10; i++)
         {
             for (int j = 0; j < 10; j++)
             {
-                if (leak(spaces[i, j], nodes, newElements)) return false;
+                if (leak(spaces[i, j], nodes)) return false;
             }
         }
 

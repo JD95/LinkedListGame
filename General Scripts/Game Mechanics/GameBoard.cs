@@ -53,7 +53,6 @@ public class Backlog {
 }
 
 public class GameBoard : MonoBehaviour {
-    public static List<GameNode> newElements = new List<GameNode>();
     public static List<GameNode> masterList = new List<GameNode>();
 
     public static GameLinkedList nodes = new GameLinkedList();
@@ -110,7 +109,7 @@ public class GameBoard : MonoBehaviour {
     {
         adjustLighting();
 
-		if (!inErrorState && !board.noLeaks (nodes, newElements)) { // check for memory leaks 
+		if (!inErrorState && !board.noLeaks (nodes)) { // check for memory leaks 
 			Debug.Log("Memory leaks detected.");
 			popupText.makePopup ("A memory leak error detected. You can press Undo button to fix it or restart the level.");
 			inErrorState = true;
@@ -170,7 +169,6 @@ public class GameBoard : MonoBehaviour {
             if (drawCube != null && selectedCube != null)
             {
                 Debug.Log("Nodes connected!");
-				newElements.Remove (selectedCube);
                 actionCount++;
 
                 Action temp = new Action(Action_Type.POINT_AT, actionCount, drawCube.next);
@@ -247,7 +245,6 @@ public class GameBoard : MonoBehaviour {
         masterList.Add(node);
 
         node.value.SetActive(active);
-		newElements.Add(node);
 
         if (display_message)
         {

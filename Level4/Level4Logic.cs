@@ -55,7 +55,6 @@ public class Level4Logic : WinCondition
 
                 foreach (var node in firstgroup) {
                     node.deleteNode(false);
-                    GameBoard.newElements.Remove(node);
                 }
 
                 GameBoard.log.wipeAll();

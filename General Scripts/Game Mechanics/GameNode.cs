@@ -69,7 +69,6 @@ public class Action
     }
     public void undoPoint(GameNode n)
     {
-        GameBoard.newElements.Add(n.next);
         n.next = oldNode;
     }
 
