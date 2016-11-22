@@ -11,8 +11,6 @@ public class NodePointer : MonoBehaviour
     public bool isActive = false;
     public Stack<GameNode> pointerMoves = new Stack<GameNode>();
 
-    private float distance = 45.9f;
-
     public void Start()
     {
 
@@ -36,7 +34,7 @@ public class NodePointer : MonoBehaviour
 		if (node != null) {
             Debug.Log("Setting " + gameObject.name + "'s node to be " + active);
 			spotlight.SetActive (active);
-			node.value.transform.gameObject.SetActive (active);		
+			node.value.SetActive (active);		
 		}
     }
 

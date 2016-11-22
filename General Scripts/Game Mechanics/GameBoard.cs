@@ -102,7 +102,7 @@ public class GameBoard : MonoBehaviour {
         }
             
         nullPointer.pointTo(nullCube.GetComponent<GameNode>());
-		nullPointer.togglePointer ();
+	    nullPointer.togglePointer ();
 	}
 
     void Update()
@@ -284,7 +284,7 @@ public class GameBoard : MonoBehaviour {
 		if (inErrorState)
 			return;
 
-        if (currentPointer.node.next.deleted || currentPointer.node.next == null)
+        if (currentPointer.node.next == null || currentPointer.node.next.deleted)
         {
             moveToNull();
 			Debug.Log ("move to null");

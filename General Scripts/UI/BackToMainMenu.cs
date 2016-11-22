@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class BackToMainMenu : MonoBehaviour {
 
+    public string level;
 	// Use this for initialization
 	void Start () {
 	
@@ -17,6 +18,6 @@ public class BackToMainMenu : MonoBehaviour {
 
     public void backToMainMenu()
     {
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene(level);
     }
 }

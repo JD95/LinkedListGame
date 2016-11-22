@@ -157,7 +157,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Main Menu
+  m_Text: Restart Level
 --- !u!222 &149860393
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -997,7 +997,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 1000010814658812, guid: 94a9999cfd498d84f94d9ec950b8a3f9, type: 2}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114000010637336472, guid: 94a9999cfd498d84f94d9ec950b8a3f9,
         type: 2}
@@ -1493,6 +1493,11 @@ Prefab:
         type: 2}
       propertyPath: spreadCustomCurve.m_RotationOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114000010637793790, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: isActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
@@ -2408,6 +2413,11 @@ Prefab:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114000010637793790, guid: d7e445cb476f0104aa4345b5da3645a6,
+        type: 2}
+      propertyPath: isActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d7e445cb476f0104aa4345b5da3645a6, type: 2}
   m_IsPrefabParent: 0
@@ -2917,6 +2927,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f29dc4c3903ec0f46a281765e5e46ff6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  level: Level8/Level8
 --- !u!114 &2137142921
 MonoBehaviour:
   m_ObjectHideFlags: 0
