@@ -80,6 +80,8 @@ public class GameBoard : MonoBehaviour {
     public Text blog;
     public ProgressMessages progressMessages;
 
+    private List<int> usedNumbers = new List<int>();
+
     // Use this for initialization
     void Start()
     {
@@ -211,12 +213,17 @@ public class GameBoard : MonoBehaviour {
     GameObject createNewRandomNode()
 	{
 		var newCoord = genRandCoord (rand);
-
+        int val = rand.Next(0, 99);
 		while (board.spaces[newCoord.first, newCoord.second] != null) {
 			newCoord = genRandCoord (rand);
 		}
 
-		return createNodeAt(rand.Next(0,20), newCoord.first, newCoord.second);
+        while (usedNumbers.Contains(val))
+        {
+            val = rand.Next(0, 99);
+        }
+
+		return createNodeAt(val, newCoord.first, newCoord.second);
 	}
 
     private void genNodes()
