@@ -19,14 +19,6 @@ public class Level1Logic : WinCondition {
 			new Stage(() => {
 				firstNode = board.addNewNodeReturn (true, false);
 
-				for (int i = 0; i < 3; i++)
-					groupOfNodes [i] = board.addNewNodeReturn (false, false);
-
-				firstNode.value.SetActive(true);
-
-				foreach(var node in groupOfNodes)
-					node.value.SetActive(false);
-
                 return "Please delete the node";
 
             }, () => !firstNode.isActiveAndEnabled),
@@ -36,10 +28,11 @@ public class Level1Logic : WinCondition {
                 GameBoard.masterList.Remove(firstNode);
 				firstNode.deleteNode(false);
 
+                for (int i = 0; i < 3; i++)
+                    groupOfNodes [i] = board.addNewNodeReturn (true, false);
+
                 GameBoard.log.wipeAll();
 
-				foreach (var node in groupOfNodes)
-					node.value.SetActive(true);
 
                 return "Please delete all of the nodes";
 
