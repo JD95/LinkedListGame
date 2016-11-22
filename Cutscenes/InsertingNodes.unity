@@ -2603,7 +2603,7 @@ MonoBehaviour:
   active: 0
   warpRate: 22
   transitionAfter: 4.6
-  nextScene: Level4/Level4
+  nextScene: Level7/Level7
 --- !u!1 &1073333548
 GameObject:
   m_ObjectHideFlags: 0
@@ -2775,7 +2775,6 @@ GameObject:
   - 82: {fileID: 1203103665}
   - 82: {fileID: 1203103664}
   - 82: {fileID: 1203103663}
-  - 82: {fileID: 1203103662}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -2853,104 +2852,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textbox: {fileID: 1203103659}
   dialogue:
-  - The current pointer, although a powerful tool, is often not enough to complete
-    your task.
-  - As you may have noticed, when you move the current pointer you lose sight of the
-    previous nodes.
-  - The nodes you work with here are called "singly" linked.They can only point to
-    a single node and therefore you cannot move backwards.
-  - To aid you, I shall introduce the "next" pointer.
-  - When activated, this pointer will always be one node ahead of the current pointer
-    allowing you to look forward in the list without loosing nodes...
+  - 'The time has come for you to learn the advanced list techniques. '
+  - 'So far you have either worked with a list that was already created for you or
+    you created one from scratch. '
+  - 'Now you shall test your wits and insert nodes into a list that has already been
+    built! '
+  - Tread carefully, you wouldn't want to cause a memory leak...
   voiceCues:
   - {fileID: 1203103666}
   - {fileID: 1203103665}
   - {fileID: 1203103664}
   - {fileID: 1203103663}
-  - {fileID: 1203103662}
   lineDuration:
-  - 8
-  - 8
-  - 10
   - 6
+  - 8
+  - 8
   line: 0
   typing: 1
   typing_delay: 0.5
   button: {fileID: 1448171241}
---- !u!82 &1203103662
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1203103657}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: ccbf1f828894f8340bced9c7bfcf794d, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
 --- !u!82 &1203103663
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2960,7 +2880,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 9aedfbfce3a8807488ea878d70802d12, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 877ef3c80cfbfc845baceed4ea798842, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3034,7 +2954,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6a1c3e31e0765b34ba87b0ec0e50473e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: d7a07ed4b9c82754c9afc0703f344eb2, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3108,7 +3028,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c7dc73e93a746b64a809af51bd9f2646, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 49fe9f422c1e9d74aa001362dee09f98, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -3182,7 +3102,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c05e116279cdfc94aaee3c6dd494f57b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 0da3fbec74d6f4e42addf5bc39395527, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
