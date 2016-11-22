@@ -49,6 +49,65 @@ public class Level8Logic : WinCondition {
                 firstgroup[2].nodeValue,
             })),
 
+            			// Stage 1
+			new Stage(() => {
+
+                foreach (var node in firstgroup)
+                {
+                    node.deleteNode(false);
+                    GameBoard.masterList.Remove(node);
+                }
+
+                for (int i = 0; i < 5; i++)
+                    groupOfNodes[i] = board.addNewNodeReturn(false, false);
+
+                for (int i = 0; i < 4; i++)
+                    groupOfNodes[i].next = groupOfNodes[i + 1];
+
+
+                GameBoard.nodes.first = groupOfNodes[0];
+
+                board.currentPointer.pointTo(groupOfNodes[0]);
+
+                board.nextPointer.pointTo(groupOfNodes[1]);
+                board.nextPointer.togglePointer();
+
+                board.nextNextPointer.pointTo(groupOfNodes[2]);
+                board.nextNextPointer.togglePointer();
+
+                return "Delete node " + groupOfNodes[3].nodeValue;
+
+            }, () => GameBoard.nodes.listIs(groupOfNodes.Where(n => !n.Equals(groupOfNodes[3])).Select(n => n.nodeValue).ToList())),
+
+            new Stage(() => {
+
+                foreach (var node in groupOfNodes)
+                {
+                    node.deleteNode(false);
+                    GameBoard.masterList.Remove(node);
+                }
+
+                for (int i = 0; i < 5; i++)
+                    groupOfNodes[i] = board.addNewNodeReturn(false, false);
+
+                for (int i = 0; i < 4; i++)
+                    groupOfNodes[i].next = groupOfNodes[i + 1];
+
+
+                GameBoard.nodes.first = groupOfNodes[0];
+
+                board.currentPointer.pointTo(groupOfNodes[0]);
+
+                board.nextPointer.pointTo(groupOfNodes[1]);
+                board.nextPointer.togglePointer();
+
+                board.nextNextPointer.pointTo(groupOfNodes[2]);
+                board.nextNextPointer.togglePointer();
+
+                return "Delete node " + groupOfNodes[4].nodeValue;
+
+            }, () => GameBoard.nodes.listIs(groupOfNodes.Where(n => !n.Equals(groupOfNodes[4])).Select(n => n.nodeValue).ToList())),
+
 			// Win state
 			new Stage(() => "Winner!", () => false)
 		};
