@@ -318,6 +318,9 @@ public class GameBoard : MonoBehaviour {
             nextPointer.togglePointer();
             nextPointer.sound.Play();
 			popupText.makePopup ("You toggled next pointer!");
+
+            Action temp = new Action(Action_Type.TOGGLE, ++actionCount, nextPointer);
+            nextPointer.node.actionStack.Push((Action) temp);
             log.log.Add("Next pointer, "+ nextPointer.node.nodeValue + ", toggled");
             log.outputLog();
         }
@@ -338,6 +341,11 @@ public class GameBoard : MonoBehaviour {
             nextNextPointer.togglePointer();
             nextNextPointer.sound.Play();
 			popupText.makePopup ("You toggled next next pointer!");
+
+            Action temp = new Action(Action_Type.TOGGLE, ++actionCount, nextNextPointer);
+            nextNextPointer.node.actionStack.Push((Action)temp);
+            log.log.Add("Next Next pointer, " + nextPointer.node.nodeValue + ", toggled");
+            log.outputLog();
         }
     }
 
