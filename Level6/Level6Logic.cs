@@ -41,6 +41,39 @@ public class Level6Logic : WinCondition {
 
             }, () => board.currentPointer.node == firstgroup[3]),
 
+           new Stage(() => {
+
+               foreach (var node in firstgroup) {
+                    node.deleteNode(false);
+                    GameBoard.masterList.Remove(node);
+                }
+
+                GameBoard.log.wipeAll();
+                GameBoard.log.outputLog();
+
+                for (int i = 0; i < 5; i++)
+                    groupOfNodes[i] = board.addNewNodeReturn(true, false);
+
+                GameBoard.nodes.first = groupOfNodes[0];
+                GameBoard.nodes.last = groupOfNodes[0];
+
+                board.currentPointer.pointTo(groupOfNodes[0]);
+
+                return "Please connect nodes in this order: " + groupOfNodes.Select(n => n.nodeValue + " ").Aggregate("",(l,r) => l + r);
+
+            }, () => GameBoard.nodes.listIs(groupOfNodes.Select(n => n.nodeValue).ToList())),
+
+            new Stage(() => {
+
+                return "Move current pointer to " + groupOfNodes[2].nodeValue;
+
+            }, () => board.currentPointer.node == groupOfNodes[2]),
+
+            new Stage(() => {
+
+                return "Move current pointer to " + groupOfNodes[4].nodeValue;
+
+            }, () => board.currentPointer.node == groupOfNodes[4]),
 			// Win state
 			new Stage(() => "Winner!", () => false)
 		};

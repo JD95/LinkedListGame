@@ -41,7 +41,7 @@ public class Level7Logic : WinCondition {
             // Stage 2
 			new Stage(() => {
 
-                return "Point node " + firstgroup[2].nodeValue + " at next pointer";
+                return "Point node " + firstgroup[2].nodeValue + " at the next pointer";
 
             }, () => GameBoard.nodes.listIs(new List<string> {
                 firstgroup[0].nodeValue,

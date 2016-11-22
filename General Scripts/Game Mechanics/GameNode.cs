@@ -74,7 +74,8 @@ public class Action
 
     public void undoToggle(GameNode n)
     {
-
+        nPtr.pointTo(nPtr.pointerMoves.Pop());
+        nPtr.togglePointer();
     }
 
     public void undoMove()
