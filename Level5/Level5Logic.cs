@@ -26,15 +26,8 @@ public class Level5Logic : WinCondition
                 GameBoard.nodes.first = firstgroup[0];
                 GameBoard.nodes.last = firstgroup[0];
 
-                /*
-                firstgroup[0].next = firstgroup[1];
-                firstgroup[0].next.next = firstgroup[2];
-                GameBoard.nodes.last = firstgroup[2];
-                */
-
                 board.currentPointer.pointTo(firstgroup[0]);
-                //board.nextPointer.toggleNode();
-                //board.nextNextPointer.toggleNode();
+
 
                 return "Connect " + firstgroup[0].nodeValue + "->" + firstgroup[1].nodeValue + " and " + firstgroup[1].nodeValue + "->" + firstgroup[2].nodeValue;
 
@@ -62,8 +55,6 @@ public class Level5Logic : WinCondition
                     GameBoard.masterList.Remove(node);
                 }
 
-                GameBoard.log.wipeAll();
-
                 for (int i = 0; i < 5; i++)
                     groupOfNodes[i] = board.addNewNodeReturn(false, false);
 
@@ -85,6 +76,37 @@ public class Level5Logic : WinCondition
                 return "Toggle Next Next Pointer on " + groupOfNodes[4].nodeValue;
 
             }, () => board.nextNextPointer.node == groupOfNodes[4]),
+
+
+            //Stage 5
+            new Stage(() => {
+
+                foreach (var node in groupOfNodes) {
+                    node.deleteNode(false);
+                    GameBoard.masterList.Remove(node);
+                }
+
+                for (int i = 0; i < 5; i++)
+                    groupOfNodes[i] = board.addNewNodeReturn(false, false);
+
+                for (int i = 0; i < 4; i++)
+                {
+                    groupOfNodes[i].next = groupOfNodes[i + 1];
+                }
+
+                GameBoard.nodes.first = groupOfNodes[0];
+
+                board.currentPointer.pointTo(groupOfNodes[0]);
+
+                board.nextPointer.pointTo(groupOfNodes[1]);
+                board.nextPointer.togglePointer();
+
+                board.nextNextPointer.pointTo(groupOfNodes[2]);
+                board.nextNextPointer.togglePointer();
+
+                return "Toggle Next Pointer on " + groupOfNodes[3].nodeValue;
+
+            }, () => board.nextPointer.node == groupOfNodes[3]),
 
 			// Win state
 			new Stage(() => "Winner!", () => false)

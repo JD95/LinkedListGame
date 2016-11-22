@@ -25,6 +25,7 @@ public abstract class WinCondition : MonoBehaviour {
     {
         stage++;
         setInstructionText(stages[stage].setup());
+        GameBoard.log.wipeAll();
     }
 
     public bool win()
