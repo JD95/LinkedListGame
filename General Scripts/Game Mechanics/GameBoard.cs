@@ -107,7 +107,7 @@ public class GameBoard : MonoBehaviour {
 
     void Update()
     {
-        adjustLighting();
+       adjustLighting();
 
 		if (!inErrorState && !board.noLeaks (nodes)) { // check for memory leaks 
 			Debug.Log("Memory leaks detected.");
@@ -131,13 +131,12 @@ public class GameBoard : MonoBehaviour {
 
     void adjustLight(NodePointer pointer, Color color)
     {
-        if (pointer.isActive && pointer.node != null)
+        if (pointer.isActive && !pointer.node.deleted)
         {
             pointer.setNodeActive(true);
             pointer.spotlight.GetComponent<Light>().color = color;
         }
-
-		if (pointer.node == null || pointer.node.deleted)
+		else if (pointer.isActive && pointer.node.deleted)
         {
             pointer.spotlight.GetComponent<Light>().color = LightColors.grey;
 			pointer.setNodeActive (false);
@@ -285,7 +284,7 @@ public class GameBoard : MonoBehaviour {
 		if (inErrorState)
 			return;
 
-        if (currentPointer.node.next == null)
+        if (currentPointer.node.next.deleted || currentPointer.node.next == null)
         {
             moveToNull();
 			Debug.Log ("move to null");

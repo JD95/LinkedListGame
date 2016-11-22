@@ -34,8 +34,9 @@ public class NodePointer : MonoBehaviour
     public void setNodeActive(bool active)
     {
 		if (node != null) {
+            Debug.Log("Setting " + gameObject.name + "'s node to be " + active);
 			spotlight.SetActive (active);
-			node.value.SetActive (active);		
+			node.value.transform.gameObject.SetActive (active);		
 		}
     }
 
@@ -63,27 +64,24 @@ public class NodePointer : MonoBehaviour
     {
         if (node != null)
         {
-            setNodeActive(false);
+            setNodeActive(false); // Turn off the current node
             if (isCurrentPointer) node.value.GetComponent<GameNode>().setNodeButtonActive(true);
         }
 
+        otherNode.value.GetComponent<GameNode>().newElementLight.SetActive(false);
+
         var position = otherNode.value.transform.position;
         spotlight.transform.position = new Vector3(position.x, 5.55f, position.z);
-
-        otherNode.value.GetComponent<GameNode>().newElementLight.SetActive(false);
 
         node = otherNode;
 
         setNodeActive(true);
         if (isCurrentPointer) node.value.GetComponent<GameNode>().setNodeButtonActive(false);
-
-		//Push to the gamenode stack
     }
 
     public void pointToAndActivate(GameNode otherNode)
     {
         pointTo(otherNode);
-        node.value.SetActive(true);
     }
 
 

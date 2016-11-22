@@ -101,11 +101,10 @@ public class GameNode : MonoBehaviour {
 	public bool isNull = false;
 
     private ParticleSystem particles;
-    public Stack actionStack;
+    public Stack actionStack = new Stack();
 
 
     void Start () {
-        actionStack = new Stack();
 
         particle = transform.Find("Particle System");
         particles = particle.gameObject.GetComponent<ParticleSystem>();
