@@ -104,9 +104,9 @@ public class Level8Logic : WinCondition {
                 board.nextNextPointer.pointTo(groupOfNodes[2]);
                 board.nextNextPointer.togglePointer();
 
-                return "Delete node " + groupOfNodes[4].nodeValue;
+                return "Delete node " + groupOfNodes[3].nodeValue;
 
-            }, () => GameBoard.nodes.listIs(groupOfNodes.Where(n => !n.Equals(groupOfNodes[4])).Select(n => n.nodeValue).ToList())),
+            }, () => GameBoard.nodes.listIs(groupOfNodes.Where(n => !n.Equals(groupOfNodes[3])).Select(n => n.nodeValue).ToList())),
 
 			// Win state
 			new Stage(() => "Winner!", () => false)
